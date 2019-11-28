@@ -49,32 +49,30 @@ def make_color_wheel():
 
 
 def uv_to_rgb(fu, fv):
-    if fu.ndim < 3:
+    if fu.ndim < 2:
         raise AssertionError(
-            'Flow vectors must have (frame, height, width) shape')
+            'Flow vectors must have (height, width) shape')
 
     colorwheel = make_color_wheel()
     ncols = colorwheel.shape[0]
 
-    [nframes, h, w] = fu.shape
-    rgb = np.empty([nframes, h, w, 3], dtype=np.uint8)
+    [h, w] = fu.shape
+    rgb = np.empty([h, w, 3], dtype=np.uint8)
 
-    for frame, (u, v) in enumerate(zip(fu, fv)):
-        rad = np.sqrt(u ** 2 + v ** 2)
-        a = np.arctan2(-v, -u) / np.pi
-        print(a.shape)
-        fk = (a + 1) / 2 * (ncols - 1)  # -1~1 mapped to 1~ncols
-        k0 = fk.astype(np.uint8)
-        k1 = (k0 + 1) % ncols
-        f = fk - k0
-        for i in range(3):  # r g b
-            col0 = colorwheel[k0, i]/255.0
-            col1 = colorwheel[k1, i]/255.0
-            col = np.multiply(1.0-f, col0) + np.multiply(f, col1)
+    rad = np.sqrt(fu ** 2 + fv ** 2)
+    a = np.arctan2(-fv, -fu) / np.pi
+    fk = (a + 1) / 2 * (ncols - 1)  # -1~1 mapped to 1~ncols
+    k0 = fk.astype(np.uint8)
+    k1 = (k0 + 1) % ncols
+    f = fk - k0
+    for i in range(3):  # r g b
+        col0 = colorwheel[k0, i]/255.0
+        col1 = colorwheel[k1, i]/255.0
+        col = np.multiply(1.0-f, col0) + np.multiply(f, col1)
 
-            # increase saturation with radius
-            col = 1.0 - np.multiply(rad, 1.0 - col)
+        # increase saturation with radius
+        col = 1.0 - np.multiply(rad, 1.0 - col)
 
-            rgb[frame, :, :, i] = np.floor(col * 255).astype(np.uint8)
+        rgb[:, :, i] = np.floor(col * 255).astype(np.uint8)
 
     return rgb

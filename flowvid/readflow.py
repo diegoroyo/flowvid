@@ -28,10 +28,17 @@ def read_flow(file_path):
     return flow
 
 
-def read_flow_directory(directory):
-    """
-        TODO
-    """
+def find_max_flow(file_list):
+    fmax = 0.0
+    for file in file_list:
+        flow = read_flow(file)
+        fu = flow[:, :, 0]
+        fv = flow[:, :, 1]
+        fmax = max(fmax, np.sqrt(fu ** 2 + fv ** 2).max())
+
+    return fmax
+
+def list_directory(directory):
     pattern = re.compile(r'\d+')
     name_list = [f for f in os.listdir(directory) if f.endswith('.flo')]
     file_list = []  # (index, name) tuples
@@ -48,6 +55,4 @@ def read_flow_directory(directory):
             file_list.append((file_index, file_path))
     file_list = sorted(file_list, key=lambda tuple: tuple[0])
 
-    flows = np.array([read_flow(item[1]) for item in file_list])
-
-    return flows
+    return [file_tuple[1] for file_tuple in file_list]
