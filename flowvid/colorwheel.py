@@ -62,7 +62,8 @@ def uv_to_rgb(fu, fv):
     for frame, (u, v) in enumerate(zip(fu, fv)):
         rad = np.sqrt(u ** 2 + v ** 2)
         a = np.arctan2(-v, -u) / np.pi
-        fk = (a + 1.0) / 2.0 * (ncols - 1.0) + 1.0  # -1~1 mapped to 1~ncols
+        print(a.shape)
+        fk = (a + 1) / 2 * (ncols - 1)  # -1~1 mapped to 1~ncols
         k0 = fk.astype(np.uint8)
         k1 = (k0 + 1) % ncols
         f = fk - k0
@@ -72,8 +73,8 @@ def uv_to_rgb(fu, fv):
             col = np.multiply(1.0-f, col0) + np.multiply(f, col1)
 
             # increase saturation with radius
-            col = np.multiply(1.0 - rad, 1.0 - col)
+            col = 1.0 - np.multiply(rad, 1.0 - col)
 
-            rgb[frame, :, :, i] = np.floor(col * 255.0)
+            rgb[frame, :, :, i] = np.floor(col * 255).astype(np.uint8)
 
     return rgb

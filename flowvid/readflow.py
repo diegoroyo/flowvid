@@ -35,6 +35,11 @@ def read_flow_directory(directory):
     pattern = re.compile(r'\d+')
     name_list = [f for f in os.listdir(directory) if f.endswith('.flo')]
     file_list = []  # (index, name) tuples
+
+    if not name_list:
+        raise AssertionError(
+            'There are no .flo files in directory {d}'.format(d=directory))
+
     for name in name_list:
         match = pattern.match(name)
         if match is not None:

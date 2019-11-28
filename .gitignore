@@ -1,3 +1,5 @@
 .vscode
 flowvid/__pycache__
 test
+*.png
+*.mp4
