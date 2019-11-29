@@ -46,7 +46,7 @@ class FloData:
         if os.path.isfile(source):
             self.source = list(source)
         elif os.path.isdir(source):
-            self.source = (self.__list_directory(source))[0:1]
+            self.source = (self.__list_directory(source))
         else:
             raise AssertionError('Source does not exist')
 

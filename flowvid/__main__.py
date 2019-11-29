@@ -41,9 +41,7 @@ if video_type == 'color':
     out = VideoOutput(filename=out_name, framerate=framerate)
     rgbfilter = FloToRGB()
     for i, flow in enumerate(flodata):
-        normflow = datafilter.apply(flow)
-        rgb = rgbfilter.apply(normflow)
-        out.add_frame(rgb)
-    out.close()
+        print('Frame', i)
+        out.add_frame(rgbfilter.apply(datafilter.apply(flow)))
 else:
     print('Need parameter: {{ color | add }}'.format(p=sys.argv[0]))

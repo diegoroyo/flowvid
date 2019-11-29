@@ -57,7 +57,7 @@ class FloToRGB(Filter):
 
         colorwheel = self.__make_color_wheel()
         ncols = colorwheel.shape[0]
-
+            
         fu = data[:, :, 0]
         fv = data[:, :, 1]
 
@@ -78,6 +78,7 @@ class FloToRGB(Filter):
             # increase saturation with radius
             col = 1.0 - np.multiply(rad, 1.0 - col)
 
-        data[:, :, i] = np.floor(col * 255).astype(np.uint8)
+            # save to data channel i
+            data[:, :, i] = np.floor(col * 255).astype(np.uint8)
 
-        return data
+        return super().apply(data)
