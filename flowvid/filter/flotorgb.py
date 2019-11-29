@@ -55,9 +55,12 @@ class FloToRGB(Filter):
         if not isinstance(data, np.ndarray) or not data.ndim == 3:
             raise AssertionError('Data should be [h, w, 2] flow data ndarray')
 
+        # TODO no crearla todas las veces
         colorwheel = self.__make_color_wheel()
+        # if not hasattr(self.apply, 'colorwheel'):
+        #     setattr(self.apply, 'colorwheel', self.__make_color_wheel())
         ncols = colorwheel.shape[0]
-            
+
         fu = data[:, :, 0]
         fv = data[:, :, 1]
 

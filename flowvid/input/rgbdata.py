@@ -1,50 +1,32 @@
 import os
 import re
+import imageio
 import numpy as np
 
 
-TAG_FLOAT = 202021.25
-
-
-class FloDataIterator:
+class RGBDataIterator:
     def __init__(self, flodata):
         self._iter = iter(flodata.source)
 
     def __next__(self):
         file_name = next(self._iter)
-        return self.__read_flow(file_name)
+        return self.__read_image(file_name)
 
     @classmethod
-    def __read_flow(self, file_path):
+    def __read_image(self, file_path):
         """
             TODO
         """
-        with open(file_path, 'rb') as file:
-            tag = np.frombuffer(file.read(4), dtype=np.float32, count=1)[0]
-            if not tag == TAG_FLOAT:
-                raise AssertionError(
-                    'File {f} has wrong tag ({t})'.format(f=file_path, t=tag))
-
-            [width, height] = np.frombuffer(
-                file.read(8), dtype=np.int32, count=2)
-
-            dimensions = 2  # u (horizontal) and v (vertical)
-            items = width * height * dimensions
-
-            # read flow values from file
-            flow = np.frombuffer(file.read(4 * items),
-                                 dtype=np.float32, count=items)
-            flow = np.resize(flow, (height, width, dimensions))
-
-        return flow
+        return imageio.imread(file_path)
 
 
-class FloData:
+# TODO hacer que acepte mas que PNG
+class RGBData:
 
     def __init__(self, source, first=None, num_files=None):
         # .flo file source
         if os.path.isfile(source):
-            self.source = list(source)
+            self.source = [source]
         elif os.path.isdir(source):
             self.source = (self.__list_directory(source, first, num_files))
         else:
@@ -56,20 +38,20 @@ class FloData:
 
     @classmethod
     def from_directory(cls, dir_name, first=0, num_files=None):
-        return cls(dir_name, first=first, num_files=num_files)
+        return cls(dir_name, first, num_files)
 
     def __iter__(self):
-        return FloDataIterator(self)
+        return RGBDataIterator(self)
 
     @classmethod
     def __list_directory(self, directory, first, num_files):
         pattern = re.compile(r'\d+')
-        name_list = [f for f in os.listdir(directory) if f.endswith('.flo')]
+        name_list = [f for f in os.listdir(directory) if f.endswith('.png')]
         file_list = []  # (index, name) tuples
 
         if not name_list:
             raise AssertionError(
-                'There are no .flo files in directory {d}'.format(d=directory))
+                'There are no .png files in directory {d}'.format(d=directory))
 
         for name in name_list:
             match = pattern.match(name)
@@ -81,6 +63,6 @@ class FloData:
 
         if num_files is None:
             num_files = len(file_list) - first
-
+            
         file_names = [file_tuple[1] for file_tuple in file_list]
         return file_names[first:first+num_files]
