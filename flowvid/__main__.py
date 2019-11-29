@@ -1,5 +1,9 @@
 import sys
-from flowvid.flowconversion import flows_to_colors
+import numpy as np
+from flowvid.input.flodata import FloData
+from flowvid.filter.normalize import Filter, NormalizeFrame, NormalizeVideo
+from flowvid.filter.flotorgb import FloToRGB
+from flowvid.output.videooutput import VideoOutput
 
 
 def ask_string(format_prompt, default):
@@ -28,7 +32,18 @@ if video_type == 'color':
     out_name = ask_string(
         'Output video name ({s}): ', default='output_flo.mp4')
 
-    flows_to_colors(flowdir=flo_dir, filename=out_name,
-                    framerate=framerate, normalize=norm_type)
+    flodata = FloData.from_directory(flo_dir)
+    datafilter = Filter()
+    if norm_type == 'frame':
+        datafilter = NormalizeFrame()
+    elif norm_type == 'video':
+        datafilter = NormalizeVideo(flodata, clamp_pct=0.8, gamma=0.7)
+    out = VideoOutput(filename=out_name, framerate=framerate)
+    rgbfilter = FloToRGB()
+    for i, flow in enumerate(flodata):
+        normflow = datafilter.apply(flow)
+        rgb = rgbfilter.apply(normflow)
+        out.add_frame(rgb)
+    out.close()
 else:
     print('Need parameter: {{ color | add }}'.format(p=sys.argv[0]))
