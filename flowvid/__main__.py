@@ -1,8 +1,8 @@
 import sys
 import numpy as np
-from numpy import genfromtxt
 from flowvid.input.flodata import FloData
 from flowvid.input.rgbdata import RGBData
+from flowvid.input.trackpoints import TrackPoints
 from flowvid.filter.basefilter import Filter
 from flowvid.filter.normalize import NormalizeFrame, NormalizeVideo
 from flowvid.filter.drawrectangle import DrawRectangle
@@ -79,19 +79,13 @@ elif video_type == 'rectangle_truth':
 
     pngdata = RGBData.from_directory(png_dir, num_files=600)
     drawrec = DrawRectangle()
-    recdata = genfromtxt(track, delimiter=' ')
-    print(recdata.shape)
+    recdata = TrackPoints.rectangles(track, rec_format='x0 y0 xw yw')
 
     out = VideoOutput(filename=out_name, framerate=framerate)
 
-    for i, image in enumerate(pngdata):
+    for i, (image, rec) in enumerate(zip(pngdata, recdata)):
         print('Frame', i)
-        if recdata[i, 0] != -1:
-            x = int(recdata[i, 0])
-            y = int(recdata[i, 1])
-            wx = int(recdata[i, 2])
-            wy = int(recdata[i, 3])
-            image = drawrec.apply(image, [0, 255, 0], x, y, wx, wy)
+        image = drawrec.apply(image, rec, [0, 255, 0])
         out.add_frame(image)
 
 elif video_type == 'rectangle_flo':
@@ -105,20 +99,15 @@ elif video_type == 'rectangle_flo':
     pngdata = RGBData.from_directory(png_dir, first=335, num_files=100)
     flodata = FloData.from_directory(flo_dir, first=335, num_files=100)
     drawrec = DrawRectangle()
-    rec = genfromtxt(track, delimiter=' ')[0,:]
-    x0 = rec[0]
-    y0 = rec[1]
-    x1 = x0 + rec[2]
-    y1 = y0 + rec[3]
+    recdata = TrackPoints.rectangles(track, rec_format='x0 y0 xw yw')
+    rec = next(iter(recdata))
 
     out = VideoOutput(filename=out_name, framerate=framerate)
     for i, (flow, image) in enumerate(zip(flodata, pngdata)):
         print('Frame', i)
-        x0 += flow[int(y0), int(x0), 0]
-        y0 += flow[int(y0), int(x0), 1]
-        x1 += flow[int(y1), int(x1), 0]
-        y1 += flow[int(y1), int(x1), 1]
-        image = drawrec.apply(image, [255, 0, 0], int(x0), int(y0), int(x1 - x0), int(y1 - y0))
+        add = [flow[int(rec[1]), int(rec[0]), 0], flow[int(rec[1]), int(rec[0]), 1], flow[int(rec[3]), int(rec[2]), 0], flow[int(rec[3]), int(rec[2]), 1]]
+        rec = rec + add
+        image = drawrec.apply(image, rec, [255, 0, 0])
         out.add_frame(image)
 
 else:

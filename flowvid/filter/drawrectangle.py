@@ -2,24 +2,27 @@ import numpy as np
 from flowvid.filter.basefilter import Filter
 
 class DrawRectangle(Filter):
-    def apply(self, data, color, x, y, wx, wy):
+    def apply(self, img, rec, color):
         #clamping
-        [h, w] = data.shape[0:2]
-        if x > w - 1:
-            x = w - 1
-        if y > h - 1:
-            y = h - 1
-        if x + wx > w - 1:
-            wx = w - x
-        if y + wy > h - 1:
-            wy = h - y
+        [h, w] = img.shape[0:2]
+        [x0, y0, x1, y1] = rec.astype(int)
+
+        # TODO mejor clampeo
+        if x0 > w - 1:
+            x0 = w - 1
+        if y0 > h - 1:
+            y0 = h - 1
+        if x1 > w - 1:
+            x1 = w - 1
+        if y1 > h - 1:
+            y1 = h - 1
         
         #drawing
-        for px in range(x, x+wx):
-            data[y, px, :] = color
-            data[y+wy, px, :] = color
-        for py in range(y, y+wy):
-            data[py, x, :] = color
-            data[py, x+wx, :] = color
+        for px in range(x0, x1):
+            img[y0, px, :] = color
+            img[y1, px, :] = color
+        for py in range(y0, y1):
+            img[py, x0, :] = color
+            img[py, x1, :] = color
 
-        return data
+        return img

@@ -20,7 +20,6 @@ class FloToRGB(Filter):
         CB = 11  # cyan-blue
         BM = 13  # blue-magenta
         MR = 6   # magenta-red
-
         ncols = RY + YG + GC + CB + BM + MR
         colorwheel = np.zeros((ncols, 3), dtype=np.uint8)  # r g b
 
@@ -59,7 +58,7 @@ class FloToRGB(Filter):
         colorwheel = self.__make_color_wheel()
         # if not hasattr(self.apply, 'colorwheel'):
         #     setattr(self.apply, 'colorwheel', self.__make_color_wheel())
-        ncols = colorwheel.shape[0]
+        ncols = len(colorwheel)
 
         fu = data[:, :, 0]
         fv = data[:, :, 1]
