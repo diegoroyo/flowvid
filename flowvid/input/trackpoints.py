@@ -20,7 +20,7 @@ class TrackPointsIterator:
 class TrackPoints(FileInput):
 
     @classmethod
-    def rectangles(cls, file_name, rec_format='x0 y0 wx wy'):
+    def rectangles(cls, file_name, rec_format='x0 y0 wx wy', first=0, num=None):
         """
             TODO
             rec_format = 'p0 p1 p2 ...' where pi is:
@@ -33,14 +33,18 @@ class TrackPoints(FileInput):
                 - <-->: ignore field
         """
         result = cls(file_name, 'file')
-        result._points = result.__read_rectangles(result.source[0], rec_format)
+        result._points = result.__read_rectangles(result.source[0], rec_format, first, num)
         return result
 
     def __iter__(self):
         return TrackPointsIterator(self)
 
-    @classmethod
-    def __read_rectangles(self, source, rec_format):
+    def __getitem__(self, index):
+        # TODO index dentro de _points
+        return self._points[index, :]
+
+    @staticmethod
+    def __read_rectangles(source, rec_format, first, num):
         raw = genfromtxt(source, delimiter=' ')
         [cols, rows] = raw.shape
         if rows < 4:
@@ -63,5 +67,10 @@ class TrackPoints(FileInput):
         else:
             points[:, 2] = raw[:, rec_format.find('x1') // 3]
             points[:, 3] = raw[:, rec_format.find('y1') // 3]
+
+        if num is None:
+            num = len(points) - first
+        
+        points = points[first:first+num, :]
 
         return points

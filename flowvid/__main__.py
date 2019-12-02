@@ -4,11 +4,11 @@ from flowvid.input.flodata import FloData
 from flowvid.input.rgbdata import RGBData
 from flowvid.input.trackpoints import TrackPoints
 from flowvid.filter.basefilter import Filter
-from flowvid.filter.normalize import NormalizeFrame, NormalizeVideo
-from flowvid.filter.drawrectangle import DrawRectangle
+from flowvid.filter.normalizeflow import NormalizeFrame, NormalizeVideo
+from flowvid.operator.drawrectangle import DrawRectangle
 from flowvid.operator.baseoperator import Operator
 from flowvid.operator.addflow import AddFlow
-from flowvid.filter.flotorgb import FloToRGB
+from flowvid.filter.flowtorgb import FlowToRGB
 from flowvid.output.videooutput import VideoOutput
 
 
@@ -46,7 +46,7 @@ if video_type == 'color':
     elif norm_type == 'video':
         datafilter = NormalizeVideo(flodata, clamp_pct=0.8, gamma=0.7)
     out = VideoOutput(filename=out_name, framerate=framerate)
-    rgbfilter = FloToRGB()
+    rgbfilter = FlowToRGB()
     for i, flow in enumerate(flodata):
         print('Frame', i)
         out.add_frame(rgbfilter.apply(datafilter.apply(flow)))
@@ -90,24 +90,29 @@ elif video_type == 'rectangle_truth':
 
 elif video_type == 'rectangle_flo':
 
-    flo_dir = 'test/flo'#ask_string('Flow files directory ({s}): ', default='flo')
-    png_dir = 'test/png'
-    track = 'test/track/video10_annot.txt'
+    flo_dir = 'test/flo/video9'#ask_string('Flow files directory ({s}): ', default='flo')
+    png_dir = 'test/png/video9'
+    track = 'test/track/video9_annot.txt'
     framerate = 8
     out_name = 'output_flo.mp4'
 
-    pngdata = RGBData.from_directory(png_dir, first=335, num_files=100)
-    flodata = FloData.from_directory(flo_dir, first=335, num_files=100)
+    rgb_data = RGBData.from_directory(png_dir, first=0, num_files=75)
+    flo_data = FloData.from_directory(flo_dir, first=0, num_files=75)
+    track_data = TrackPoints.rectangles(track, rec_format='x0 y0 xw yw', first=0, num=75)
+    first_rec = track_data[0]
     drawrec = DrawRectangle()
-    recdata = TrackPoints.rectangles(track, rec_format='x0 y0 xw yw')
-    rec = next(iter(recdata))
 
     out = VideoOutput(filename=out_name, framerate=framerate)
-    for i, (flow, image) in enumerate(zip(flodata, pngdata)):
+    for i, (flow, image, truth_rec) in enumerate(zip(flo_data, rgb_data, track_data)):
         print('Frame', i)
-        add = [flow[int(rec[1]), int(rec[0]), 0], flow[int(rec[1]), int(rec[0]), 1], flow[int(rec[3]), int(rec[2]), 0], flow[int(rec[3]), int(rec[2]), 1]]
-        rec = rec + add
-        image = drawrec.apply(image, rec, [255, 0, 0])
+        x0 = int(np.clip(first_rec[0], 0, 639))
+        y0 = int(np.clip(first_rec[1], 0, 479))
+        x1 = int(np.clip(first_rec[2], 0, 639))
+        y1 = int(np.clip(first_rec[3], 0, 479))
+        add = [flow[y0, x0, 0], flow[y0, x0, 1], flow[y1, x1, 0], flow[y1, x1, 1]]
+        first_rec = first_rec + add
+        image = drawrec.apply(image, first_rec, [0, 0, 255])
+        image = drawrec.apply(image, truth_rec, [0, 255, 0])
         out.add_frame(image)
 
 else:

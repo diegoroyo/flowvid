@@ -1,7 +1,7 @@
 import numpy as np
-from flowvid.filter.basefilter import Filter
+from flowvid.operator.baseoperator import Operator
 
-class DrawRectangle(Filter):
+class DrawRectangle(Operator):
     def apply(self, img, rec, color):
         #clamping
         [h, w] = img.shape[0:2]

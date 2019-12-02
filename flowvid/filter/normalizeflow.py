@@ -21,11 +21,12 @@ class NormalizeVideo(Filter):
         super().__init__()
         if not isinstance(flodata, FloData):
             raise AssertionError('Invalid flow data passed to NormalizeVideo')
-        self._max = self.__find_max_flow(flodata)
+        self._max = NormalizeVideo.__find_max_flow(flodata)
         self._clamp = self._max * clamp_pct
         self._gamma = gamma
 
-    def __find_max_flow(self, flodata):
+    @staticmethod
+    def __find_max_flow(flodata):
         fmax = 0.0
         for flow in flodata:
             fu = flow[:, :, 0]

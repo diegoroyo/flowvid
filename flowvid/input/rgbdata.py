@@ -3,20 +3,20 @@ import numpy as np
 from flowvid.input.fileinput import FileInput
 
 
+def _read_image(file_path):
+    """
+        TODO
+    """
+    return imageio.imread(file_path)
+
+
 class RGBDataIterator:
     def __init__(self, flodata):
         self._iter = iter(flodata.source)
 
     def __next__(self):
         file_name = next(self._iter)
-        return self.__read_image(file_name)
-
-    @classmethod
-    def __read_image(self, file_path):
-        """
-            TODO
-        """
-        return imageio.imread(file_path)
+        return _read_image(file_name)
 
 
 class RGBData(FileInput):
@@ -31,3 +31,7 @@ class RGBData(FileInput):
 
     def __iter__(self):
         return RGBDataIterator(self)
+
+    def __getitem__(self, index):
+        # TODO el index esta dentro de source
+        return _read_image(self.source[index])

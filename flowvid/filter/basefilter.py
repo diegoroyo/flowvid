@@ -2,13 +2,11 @@ class Filter:
     def __init__(self):
         self._next_filter = None
 
-    def then(self, next_filter):
-        # if not issubclass(next_filter, Filter):
-        #     raise AssertionError('Cannot concatenate a filter with a non-filter')
-        # _next_filter = next_filter
-        # return self
-        # TODO
-        pass
+    def set_next(self, next_filter):
+        if self._next_filter is None:
+            self._next_filter = next_filter
+        else:
+            self._next_filter.set_next(next_filter)
 
     def apply(self, data):
         if self._next_filter is None:

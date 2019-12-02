@@ -8,7 +8,7 @@ from flowvid.input.flodata import FloData
 # http://www.quadibloc.com/other/colint.htm
 
 
-class FloToRGB(Filter):
+class FlowToRGB(Filter):
 
     @classmethod
     def __make_color_wheel(self):
