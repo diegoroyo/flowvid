@@ -1,6 +1,5 @@
 .vscode
-flowvid/__pycache__
-flowvid/*/__pycache__
+*__pycache__*
 test
 *.png
 *.mp4

@@ -1,7 +1,7 @@
 import os
 import re
 import numpy as np
-from flowvid.input.fileinput import FileInput
+from flowvid.fvinput.fileinput import FileInput
 
 
 TAG_FLOAT = 202021.25
@@ -31,28 +31,8 @@ def _read_flow(file_path):
     return flow
 
 
-class FloDataIterator:
-    def __init__(self, flodata):
-        self._iter = iter(flodata.source)
-
-    def __next__(self):
-        file_name = next(self._iter)
-        return _read_flow(file_name)
-
-
 class FloData(FileInput):
 
-    @classmethod
-    def from_file(cls, file_name):
-        return cls(file_name, 'file')
-
-    @classmethod
-    def from_directory(cls, dir_name, first=0, num_files=None):
-        return cls(dir_name, 'dir', '.flo', first, num_files)
-
-    def __iter__(self):
-        return FloDataIterator(self)
-
-    def __getitem__(self, index):
+    def _getitem(self, index):
         # TODO el index esta dentro de source
         return _read_flow(self.source[index])

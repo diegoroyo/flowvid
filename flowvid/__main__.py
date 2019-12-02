@@ -1,15 +1,8 @@
 import sys
 import numpy as np
-from flowvid.input.flodata import FloData
-from flowvid.input.rgbdata import RGBData
-from flowvid.input.trackpoints import TrackPoints
-from flowvid.filter.basefilter import Filter
-from flowvid.filter.normalizeflow import NormalizeFrame, NormalizeVideo
-from flowvid.operator.drawrectangle import DrawRectangle
-from flowvid.operator.baseoperator import Operator
-from flowvid.operator.addflow import AddFlow
-from flowvid.filter.flowtorgb import FlowToRGB
-from flowvid.output.videooutput import VideoOutput
+import flowvid as fv
+from flowvid import fvinput
+from flowvid import fvoutput
 
 
 def ask_string(format_prompt, default):
@@ -39,17 +32,15 @@ if video_type == 'color':
     out_name = ask_string(
         'Output video name ({s}): ', default='output_flo.mp4')
 
-    flodata = FloData.from_directory(flo_dir)
-    datafilter = Filter()
+    flo_data = fvinput.flo(flo_dir)
     if norm_type == 'frame':
-        datafilter = NormalizeFrame()
+        flo_data = fv.normalize_frame(flo_data)
     elif norm_type == 'video':
-        datafilter = NormalizeVideo(flodata, clamp_pct=0.8, gamma=0.7)
-    out = VideoOutput(filename=out_name, framerate=framerate)
-    rgbfilter = FlowToRGB()
-    for i, flow in enumerate(flodata):
-        print('Frame', i)
-        out.add_frame(rgbfilter.apply(datafilter.apply(flow)))
+        flo_data = fv.normalize_video(flo_data, clamp_pct=0.8, gamma=0.7)
+    rgb_data = fv.flow_to_rgb(flo_data)
+
+    out = fvoutput.video(out_name, framerate=framerate)
+    out.add_all(rgb_data, verbose=True)
 
 elif video_type == 'add':    
 
@@ -59,15 +50,12 @@ elif video_type == 'add':
     framerate = 1
     out_name = 'output.mp4'
 
-    flodata = FloData.from_directory(flo_dir, 0, n)
-    imdata = next(iter(RGBData.from_file(image)))
-    addoperator = AddFlow(imdata.shape[0:2])
-    out = VideoOutput(filename=out_name, framerate=framerate)
-    out.add_frame(imdata)
-    for i, flow in enumerate(flodata):
-        print('Frame', i)
-        imdata = addoperator.apply(imdata, flow)
-        out.add_frame(imdata)
+    flo_data = fvinput.flo(flo_dir, dir_first=0, dir_total=n)
+    image = fvinput.rgb(image)[0]
+    # addoperator = AddFlow(imdata.shape[0:2])
+    out = fvoutput.video(out_name, framerate=framerate)
+    # synth_image = fv.add_flow_image(image, flo_data)
+    # out.add_all(synth_image)
 
 elif video_type == 'rectangle_truth':
 
@@ -77,16 +65,13 @@ elif video_type == 'rectangle_truth':
     framerate = 8
     out_name = 'output_truth.mp4'
 
-    pngdata = RGBData.from_directory(png_dir, num_files=600)
-    drawrec = DrawRectangle()
-    recdata = TrackPoints.rectangles(track, rec_format='x0 y0 xw yw')
+    rgb_data = fvinput.rgb(png_dir, dir_total=600)
+    rect_data = fvinput.rect(track, rect_format='x0 y0 xw yw')
+    # drawrec = DrawRectangle()
+    rgb_rect = fv.draw_rectangle(rgb_data, rect_data, color=[0, 255, 0])
 
-    out = VideoOutput(filename=out_name, framerate=framerate)
-
-    for i, (image, rec) in enumerate(zip(pngdata, recdata)):
-        print('Frame', i)
-        image = drawrec.apply(image, rec, [0, 255, 0])
-        out.add_frame(image)
+    out = fvoutput.video(out_name, framerate=framerate)
+    out.add_all(rgb_rect, verbose=True)
 
 elif video_type == 'rectangle_flo':
 
@@ -96,24 +81,17 @@ elif video_type == 'rectangle_flo':
     framerate = 8
     out_name = 'output_flo.mp4'
 
-    rgb_data = RGBData.from_directory(png_dir, first=0, num_files=75)
-    flo_data = FloData.from_directory(flo_dir, first=0, num_files=75)
-    track_data = TrackPoints.rectangles(track, rec_format='x0 y0 xw yw', first=0, num=75)
-    first_rec = track_data[0]
-    drawrec = DrawRectangle()
+    rgb_data = fvinput.rgb(png_dir, dir_first=0, dir_total=75)
+    flo_data = fvinput.flo(flo_dir, dir_first=0, dir_total=75)
+    track_data = fvinput.rect(track, rect_format='x0 y0 xw yw', elem_first=0, elem_total=75)
+    first_rect = track_data[0]
 
-    out = VideoOutput(filename=out_name, framerate=framerate)
-    for i, (flow, image, truth_rec) in enumerate(zip(flo_data, rgb_data, track_data)):
-        print('Frame', i)
-        x0 = int(np.clip(first_rec[0], 0, 639))
-        y0 = int(np.clip(first_rec[1], 0, 479))
-        x1 = int(np.clip(first_rec[2], 0, 639))
-        y1 = int(np.clip(first_rec[3], 0, 479))
-        add = [flow[y0, x0, 0], flow[y0, x0, 1], flow[y1, x1, 0], flow[y1, x1, 1]]
-        first_rec = first_rec + add
-        image = drawrec.apply(image, first_rec, [0, 0, 255])
-        image = drawrec.apply(image, truth_rec, [0, 255, 0])
-        out.add_frame(image)
+    rgb_truth = fv.draw_rectangle(rgb_data, track_data, color=[0, 255, 0])
+    flo_rect = fv.add_flow_rect(first_rect, flo_data)
+    image_both = fv.draw_rectangle(rgb_truth, flo_rect, color=[0, 0, 255])
+
+    out = fvoutput.video(out_name, framerate=framerate)
+    out.add_all(image_both)
 
 else:
     print('Need parameter: {{ color | add | rectangle_truth | rectangle_flo }}'.format(p=sys.argv[0]))

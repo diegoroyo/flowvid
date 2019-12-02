@@ -1,6 +1,6 @@
 import numpy as np
-from flowvid.filter.basefilter import Filter
-from flowvid.input.flodata import FloData
+from flowvid.fvcore.filterable import Filterable
+from flowvid.fvcore.filters.basefilter import Filter
 
 
 class NormalizeFrame(Filter):
@@ -17,18 +17,18 @@ class NormalizeFrame(Filter):
 
 
 class NormalizeVideo(Filter):
-    def __init__(self, flodata, clamp_pct=1, gamma=1):
-        super().__init__()
-        if not isinstance(flodata, FloData):
+    def __init__(self, flo_data, clamp_pct, gamma):
+        Filter.__init__(self)
+        if not isinstance(flo_data, Filterable):
             raise AssertionError('Invalid flow data passed to NormalizeVideo')
-        self._max = NormalizeVideo.__find_max_flow(flodata)
+        self._max = NormalizeVideo.__find_max_flow(flo_data)
         self._clamp = self._max * clamp_pct
         self._gamma = gamma
 
     @staticmethod
-    def __find_max_flow(flodata):
+    def __find_max_flow(flo_data):
         fmax = 0.0
-        for flow in flodata:
+        for flow in flo_data:
             fu = flow[:, :, 0]
             fv = flow[:, :, 1]
             fmax = max(fmax, np.sqrt(fu ** 2 + fv ** 2).max())

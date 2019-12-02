@@ -1,29 +1,14 @@
 import numpy as np
 from numpy import genfromtxt
-from flowvid.input.fileinput import FileInput
+from flowvid.fvinput.fileinput import FileInput
 
 
-class TrackPointsIterator:
-    def __init__(self, trackdata):
-        self._index = -1
-        self._max = trackdata._points.shape[0]
-        self._data = trackdata._points
+class TrackRectangles(FileInput):
 
-    def __next__(self):
-        self._index = self._index + 1
-        if self._index == self._max:
-            raise StopIteration
-        else:
-            return self._data[self._index, :]
-
-
-class TrackPoints(FileInput):
-
-    @classmethod
-    def rectangles(cls, file_name, rec_format='x0 y0 wx wy', first=0, num=None):
+    def __init__(self, path, rect_format, elem_first, elem_total):
         """
             TODO
-            rec_format = 'p0 p1 p2 ...' where pi is:
+            rect_format = 'p0 p1 p2 ...' where pi is:
                 - <x0>: left side
                 - <y0>: top side
                 - <x1>: right side
@@ -32,19 +17,19 @@ class TrackPoints(FileInput):
                 - <yw>: rectangle height
                 - <-->: ignore field
         """
-        result = cls(file_name, 'file')
-        result._points = result.__read_rectangles(result.source[0], rec_format, first, num)
-        return result
+        FileInput.__init__(self, path)
+        self._points = self.__read_rectangles(
+            self.source[0], rect_format, elem_first, elem_total)
 
-    def __iter__(self):
-        return TrackPointsIterator(self)
+    def __len__(self):
+        return self._points.shape[0]
 
-    def __getitem__(self, index):
+    def _getitem(self, index):
         # TODO index dentro de _points
         return self._points[index, :]
 
     @staticmethod
-    def __read_rectangles(source, rec_format, first, num):
+    def __read_rectangles(source, rec_format, elem_first, elem_total):
         raw = genfromtxt(source, delimiter=' ')
         [cols, rows] = raw.shape
         if rows < 4:
@@ -68,9 +53,9 @@ class TrackPoints(FileInput):
             points[:, 2] = raw[:, rec_format.find('x1') // 3]
             points[:, 3] = raw[:, rec_format.find('y1') // 3]
 
-        if num is None:
-            num = len(points) - first
-        
-        points = points[first:first+num, :]
+        if elem_total is None:
+            elem_total = len(points) - elem_first
+
+        points = points[elem_first:elem_first+elem_total, :]
 
         return points

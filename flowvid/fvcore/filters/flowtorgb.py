@@ -1,6 +1,5 @@
 import numpy as np
-from flowvid.filter.basefilter import Filter
-from flowvid.input.flodata import FloData
+from flowvid.fvcore.filters.basefilter import Filter
 
 # All this code is adapted from the one available at:
 # https://people.csail.mit.edu/celiu/OpticalFlow/
@@ -83,4 +82,4 @@ class FlowToRGB(Filter):
             # save to data channel i
             data[:, :, i] = np.floor(col * 255).astype(np.uint8)
 
-        return super().apply(data)
+        return data
