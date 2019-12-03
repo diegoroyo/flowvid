@@ -38,11 +38,14 @@ class DrawRectangle(Operator):
         self._rect_data = rect_data
         self._color = color
 
-    def __iter__(self):
-        return DrawRectangleIterator(self)
-
     def __len__(self):
         return len(self._rect_data)
+
+    def get_type(self):
+        return 'rgb'
+        
+    def __iter__(self):
+        return DrawRectangleIterator(self)
 
     def _draw(self, image, rect):
         """
