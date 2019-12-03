@@ -1,12 +1,12 @@
 import numpy as np
 
-from flowvid.core.filterable import Filterable
+from .filterable import Filterable
 
-from flowvid.core.filters.normalizeflow import NormalizeFrame, NormalizeVideo
-from flowvid.core.filters.flowtorgb import FlowToRGB
+from .filters.normalizeflow import NormalizeFrame, NormalizeVideo
+from .filters.flowtorgb import FlowToRGB
 
-from flowvid.core.operators.addflowrect import AddFlowRect
-from flowvid.core.operators.drawrectangle import DrawRectangle
+from .operators.addflowrect import AddFlowRect
+from .operators.drawrectangle import DrawRectangle
 
 
 """

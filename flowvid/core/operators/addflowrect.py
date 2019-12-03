@@ -1,6 +1,6 @@
 import numpy as np
-from flowvid.core.filterable import Filterable
-from flowvid.core.operators.baseoperator import Operator
+from ..filterable import Filterable
+from .baseoperator import Operator
 
 
 class AddFlowRectIterator:

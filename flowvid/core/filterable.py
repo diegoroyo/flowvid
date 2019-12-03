@@ -1,4 +1,4 @@
-from flowvid.core.filters.basefilter import Filter
+from ..core.filters.basefilter import Filter
 import copy
 
 
