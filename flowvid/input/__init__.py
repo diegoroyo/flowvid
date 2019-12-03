@@ -1,6 +1,6 @@
-from .flodata import FloData
-from .rgbdata import RGBData
-from .trackpoints import TrackRectangles
+from .flo_data import FloData
+from .rgb_data import RGBData
+from .track_points import TrackRectangles
 
 
 def flo(path, dir_first=0, dir_total=None):

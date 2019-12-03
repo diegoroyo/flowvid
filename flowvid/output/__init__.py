@@ -1,5 +1,5 @@
-from .videooutput import VideoOutput
-from .imageoutput import ImageOutput
+from .video_output import VideoOutput
+from .image_output import ImageOutput
 import os
 
 

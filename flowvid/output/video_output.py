@@ -16,5 +16,6 @@ class VideoOutput:
     def add_all(self, images, verbose=False):
         n = len(images)
         for i, image in enumerate(images):
-            print(' Frame', i + 1, 'of', n, end='\r')  # TODO prettify
+            if verbose:
+                print(' Frame', i + 1, 'of', n, end='\r')  # TODO prettify
             self.add_frame(image)

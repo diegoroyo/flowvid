@@ -1,5 +1,5 @@
 import numpy as np
-from ..filters.basefilter import Filter
+from ..filters.base_filter import Filter
 
 # All this code is adapted from the one available at:
 # https://people.csail.mit.edu/celiu/OpticalFlow/

@@ -2,11 +2,11 @@ import numpy as np
 
 from .filterable import Filterable
 
-from .filters.normalizeflow import NormalizeFrame, NormalizeVideo
-from .filters.flowtorgb import FlowToRGB
+from .filters.normalize_flow import NormalizeFrame, NormalizeVideo
+from .filters.flow_to_rgb import FlowToRGB
 
-from .operators.addflowrect import AddFlowRect
-from .operators.drawrectangle import DrawRectangle
+from .operators.add_flow_rect import AddFlowRect
+from .operators.draw_rectangle import DrawRectangle
 
 
 """

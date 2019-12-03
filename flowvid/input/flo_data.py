@@ -2,7 +2,7 @@ import os
 import re
 import numpy as np
 from ..core.filterable import Filterable
-from .fileinput import FileInput
+from .file_input import FileInput
 
 
 TAG_FLOAT = 202021.25

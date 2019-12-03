@@ -1,6 +1,6 @@
 import numpy as np
 from ..filterable import Filterable
-from .basefilter import Filter
+from .base_filter import Filter
 
 
 class NormalizeFrame(Filter):

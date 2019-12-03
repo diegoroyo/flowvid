@@ -1,4 +1,4 @@
-from ..core.filters.basefilter import Filter
+from ..core.filters.base_filter import Filter
 import copy
 
 

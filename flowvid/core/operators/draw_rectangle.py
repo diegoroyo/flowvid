@@ -1,6 +1,6 @@
 import numpy as np
 from ..filterable import Filterable
-from .baseoperator import Operator
+from .base_operator import Operator
 
 
 class DrawRectangleIterator:

@@ -1,6 +1,6 @@
 import numpy as np
 from numpy import genfromtxt
-from .fileinput import FileInput
+from .file_input import FileInput
 
 
 class TrackRectangles(FileInput):

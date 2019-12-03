@@ -1,6 +1,6 @@
 import imageio
 import numpy as np
-from .fileinput import FileInput
+from .file_input import FileInput
 
 
 def _read_image(file_path):
