@@ -1,5 +1,8 @@
 .vscode
 *__pycache__*
+build
 test
+*.egg
+*.egg-info
 *.png
 *.mp4
