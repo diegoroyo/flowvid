@@ -41,7 +41,7 @@ class Filterable:
         return FilterableIterator(self)
 
     def __len__(self):
-        raise NotImplementedError
+        raise NotImplementedError("Whoops. Contact the owner of the repo.")
 
     def __getitem__(self, index):
         return self._apply_filters(self._getitem(index))
@@ -53,7 +53,7 @@ class Filterable:
         return True
             
     def get_type(self):
-        raise NotImplementedError
+        raise NotImplementedError("Whoops. Contact the owner of the repo.")
 
     def _getitem(self, index):
         raise NotImplementedError(

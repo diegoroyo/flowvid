@@ -3,7 +3,8 @@ import numpy as np
 from .filterable import Filterable
 
 from .filters.normalize_flow import NormalizeFrame, NormalizeVideo
-from .filters.flow_to_rgb import FlowToRGB
+
+from .conversion.flow_to_rgb import FlowToRGB
 
 from .operators.add_flow_rect import AddFlowRect
 from .operators.draw_rectangle import DrawRectangle
@@ -41,6 +42,11 @@ def normalize_video(flow, clamp_pct=1.0, gamma=1.0):
     return flow._add_filter(NormalizeVideo(flow, clamp_pct, gamma))
 
 
+"""
+    Conversion
+"""
+
+
 def flow_to_rgb(flow):
     """
         Convert Flow data into RGB data using this color circle:
@@ -48,9 +54,7 @@ def flow_to_rgb(flow):
         :param flow: List of flow data, see fv.input.flo(...)
         :returns: List of RGB data
     """
-    if not isinstance(flow, Filterable):
-        raise AssertionError('flow should be a flow data list')
-    return flow._add_filter(FlowToRGB())
+    return FlowToRGB(flow)
 
 
 """

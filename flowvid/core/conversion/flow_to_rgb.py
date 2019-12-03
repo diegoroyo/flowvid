@@ -1,5 +1,5 @@
 import numpy as np
-from ..filters.base_filter import Filter
+from ..filterable import Filterable
 
 # All this code is adapted from the one available at:
 # https://people.csail.mit.edu/celiu/OpticalFlow/
@@ -7,7 +7,17 @@ from ..filters.base_filter import Filter
 # http://www.quadibloc.com/other/colint.htm
 
 
-class FlowToRGB(Filter):
+class FlowToRGBIterator:
+    def __init__(self, obj):
+        self._obj = obj
+        self._iter = iter(obj._flo_data)
+
+    def __next__(self):
+        flow = next(self._iter)
+        return self._obj._apply_filters(FlowToRGB._flow_to_rgb(flow))
+
+
+class FlowToRGB(Filterable):
     """
         Convert Flow data into RGB data using this color circle:
         http://www.quadibloc.com/other/colint.htm
@@ -15,10 +25,24 @@ class FlowToRGB(Filter):
 
     colorwheel = None
 
-    def __init__(self):
-        Filter.__init__(self)
+    def __init__(self, flo_data):
+        Filterable.__init__(self)
         if FlowToRGB.colorwheel is None:
             FlowToRGB.colorwheel = FlowToRGB.__make_color_wheel()
+        if not isinstance(flo_data, Filterable):
+            raise AssertionError('flo_data should contain a list of flo data')
+        flo_data.assert_type('flo')
+
+        self._flo_data = flo_data
+
+    def __iter__(self):
+        return FlowToRGBIterator(self)
+
+    def __len__(self):
+        return len(self._flo_data)
+
+    def get_type(self):
+        return 'rgb'
 
     @staticmethod
     def __make_color_wheel():
@@ -61,7 +85,8 @@ class FlowToRGB(Filter):
 
         return colorwheel
 
-    def apply(self, data):
+    @staticmethod
+    def _flow_to_rgb(data):
         """
             :param data: [h, w, 2] ndarray (flow data)
             :returns: [h, w, 3] ndarray (rgb data) using color wheel

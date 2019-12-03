@@ -1,8 +1,15 @@
 import sys
+import argparse
 import numpy as np
 import flowvid as fv
 
-# TODO add argparse for video default options
+parser = argparse.ArgumentParser(prog='flowvid',
+                                 description='Generate an optical flow visualization using the available presets.')
+parser.add_argument('preset', type=str, nargs=1,
+                    help='Preset, one of: (color_flow)')
+
+args = parser.parse_args()
+
 
 def ask_string(format_prompt, default):
     answer = input(format_prompt.format(s='default: ' + default))
@@ -21,26 +28,30 @@ def ask_multichoice(format_prompt, answer_map, default):
         return answer_map[default]
 
 
-video_type = sys.argv[1] if len(sys.argv) > 0 else ''
-if video_type == 'color':
+video_type = args.preset[0]
+if video_type == 'color_flow':
 
     flo_dir = ask_string('Flow files directory ({s}): ', default='flo')
     norm_type = ask_multichoice('Vector normalize type ({s}): ',
                                 answer_map={'video': 'video', 'frame': 'frame', 'none': None}, default='frame')
+    if norm_type == 'video':
+        clamp_pct = float(ask_string(
+            'Normalization clamp percentage ({s}): ', default='1.0'))
+        gamma = float(ask_string(
+            'Normalization gamma curve exponent ({s}): ', default='1.0'))
     framerate = int(ask_string('Video framerate ({s}): ', default='24'))
     out_name = ask_string(
         'Output video name ({s}): ', default='output_flo.mp4')
 
-    flo_data = fv.input.flo(flo_dir)
+    flo_data = fv.input.flo(flo_dir, dir_total=10)
     if norm_type == 'frame':
         flo_data = fv.normalize_frame(flo_data)
     elif norm_type == 'video':
-        flo_data = fv.normalize_video(flo_data, clamp_pct=0.8, gamma=0.7)
+        flo_data = fv.normalize_video(
+            flo_data, clamp_pct=clamp_pct, gamma=gamma)
     rgb_data = fv.flow_to_rgb(flo_data)
 
     out = fv.output.video(out_name, framerate=framerate)
     out.add_all(rgb_data, verbose=True)
-
-
 else:
-    print('Need parameter: {{ color }}')
+    raise NotImplementedError("Whoops.")
