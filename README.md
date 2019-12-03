@@ -3,7 +3,7 @@
     <img src="https://via.placeholder.com/72" alt="Logo" width=72 height=72>
   </a> -->
 
-  <h1 align="center">Flowvid</h1>
+  <h1 align="center">flowvid</h1>
 
   <p align="center">
     Toolkit to generate customized visualizations related to optical flow <i>(beta 0.1.0)</i>
@@ -29,11 +29,11 @@
 
 For now installation is only available from Github:
 
-```sh
-pip install git+https://github.com/diegoroyo/flowvid/
+```
+pip3 install git+https://github.com/diegoroyo/flowvid/
 ```
 or you can clone the repo:
-```sh
+```
 git clone https://github.com/diegoroyo/flowvid.git
 cd flowvid
 scripts/local_install.sh
@@ -45,7 +45,7 @@ Flowvid is a python library for video generation, but it also contains several v
 
 * Presets can be listed using `python3 -m flowvid -h`
 
-```sh
+```
 $ python3 -m flowvid -h
 
 usage: flowvid [-h] preset
@@ -61,7 +61,7 @@ optional arguments:
 
 * Example: converting flow files to rgb and saving into a video
 
-```sh
+```
 $ python3 -m flowvid color_flow
 
 Flow files directory (default: flo): path/to/flo/dir 
@@ -76,7 +76,7 @@ Output video name (default: output_flo.mp4): flowcolors.mp4
 
 If you want to generate more complex or customized videos, you can easily use `flowvid`'s tools:
 
-* You can check the [documentation and example usages here](https://github.com/diegoroyo/flowvid/blob/master/docs).
+* You can check the [documentation and example usages here](https://github.com/diegoroyo/flowvid/blob/master/examples).
 
 ```python
 import flowvid as fv
