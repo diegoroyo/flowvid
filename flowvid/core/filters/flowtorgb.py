@@ -1,5 +1,5 @@
 import numpy as np
-from flowvid.fvcore.filters.basefilter import Filter
+from flowvid.core.filters.basefilter import Filter
 
 # All this code is adapted from the one available at:
 # https://people.csail.mit.edu/celiu/OpticalFlow/

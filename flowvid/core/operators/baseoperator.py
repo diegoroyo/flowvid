@@ -1,4 +1,4 @@
-from flowvid.fvcore.filterable import Filterable
+from flowvid.core.filterable import Filterable
 
 
 class Operator(Filterable):

@@ -1,6 +1,6 @@
 import numpy as np
 from numpy import genfromtxt
-from flowvid.fvinput.fileinput import FileInput
+from flowvid.input.fileinput import FileInput
 
 
 class TrackRectangles(FileInput):

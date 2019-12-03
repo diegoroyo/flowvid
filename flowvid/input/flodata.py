@@ -1,7 +1,7 @@
 import os
 import re
 import numpy as np
-from flowvid.fvinput.fileinput import FileInput
+from flowvid.input.fileinput import FileInput
 
 
 TAG_FLOAT = 202021.25

@@ -1,6 +1,6 @@
 import imageio
 import numpy as np
-from flowvid.fvinput.fileinput import FileInput
+from flowvid.input.fileinput import FileInput
 
 
 def _read_image(file_path):

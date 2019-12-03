@@ -1,7 +1,7 @@
 import os
 import re
 import numpy as np
-from flowvid.fvcore.filterable import Filterable
+from flowvid.core.filterable import Filterable
 
 
 class FileInput(Filterable):

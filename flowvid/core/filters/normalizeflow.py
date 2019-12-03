@@ -1,6 +1,6 @@
 import numpy as np
-from flowvid.fvcore.filterable import Filterable
-from flowvid.fvcore.filters.basefilter import Filter
+from flowvid.core.filterable import Filterable
+from flowvid.core.filters.basefilter import Filter
 
 
 class NormalizeFrame(Filter):

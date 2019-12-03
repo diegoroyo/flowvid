@@ -11,6 +11,7 @@ class ImageOutput:
 
     def save_image(self, data):
         image = Image.fromarray(data, 'RGB')
-        filename = os.path.join(self._path, self._id_template.format(self._next_id))
+        filename = os.path.join(
+            self._path, self._id_template.format(self._next_id))
         image.save(filename)
         self._next_id = self._next_id + 1

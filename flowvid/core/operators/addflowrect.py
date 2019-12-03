@@ -1,5 +1,5 @@
 import numpy as np
-from flowvid.fvcore.operators.baseoperator import Operator
+from flowvid.core.operators.baseoperator import Operator
 
 
 class AddFlowRectIterator:

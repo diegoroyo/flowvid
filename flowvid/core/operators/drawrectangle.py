@@ -1,5 +1,6 @@
 import numpy as np
-from flowvid.fvcore.operators.baseoperator import Operator
+from flowvid.core.operators.baseoperator import Operator
+
 
 class DrawRectangleIterator:
     def __init__(self, obj):
@@ -9,6 +10,7 @@ class DrawRectangleIterator:
     def __next__(self):
         (image, rect) = next(self._iter)
         return self._obj._draw(image, rect)
+
 
 class DrawRectangle(Operator):
     def __init__(self, image_data, rect_data, color):
@@ -24,7 +26,7 @@ class DrawRectangle(Operator):
         return len(self._rect_data)
 
     def _draw(self, image, rect):
-        #clamping
+        # clamping
         [h, w] = image.shape[0:2]
         [x0, y0, x1, y1] = rect.astype(int)
 
@@ -37,8 +39,8 @@ class DrawRectangle(Operator):
             x1 = w - 1
         if y1 > h - 1:
             y1 = h - 1
-        
-        #drawing
+
+        # drawing
         for px in range(x0, x1):
             image[y0, px, :] = self._color
             image[y1, px, :] = self._color
