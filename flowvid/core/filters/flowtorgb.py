@@ -8,9 +8,21 @@ from flowvid.core.filters.basefilter import Filter
 
 
 class FlowToRGB(Filter):
+    """
+        Convert Flow data into RGB data using this color circle:
+        http://www.quadibloc.com/other/colint.htm
+    """
 
-    @classmethod
-    def __make_color_wheel(self):
+    colorwheel = None
+
+    def __init__(self):
+        Filter.__init__(self)
+        if FlowToRGB.colorwheel is None:
+            FlowToRGB.colorwheel = FlowToRGB.__make_color_wheel()
+
+    @staticmethod
+    def __make_color_wheel():
+        """ :returns: [ncols, 3] ndarray colorwheel """
         # how many hues ("cols") separate each color
         # (for this color wheel)
         RY = 15  # red-yellow
@@ -50,14 +62,14 @@ class FlowToRGB(Filter):
         return colorwheel
 
     def apply(self, data):
+        """
+            :param data: [h, w, 2] ndarray (flow data)
+            :returns: [h, w, 3] ndarray (rgb data) using color wheel
+        """
         if not isinstance(data, np.ndarray) or not data.ndim == 3:
             raise AssertionError('Data should be [h, w, 2] flow data ndarray')
 
-        # TODO no crearla todas las veces
-        colorwheel = self.__make_color_wheel()
-        # if not hasattr(self.apply, 'colorwheel'):
-        #     setattr(self.apply, 'colorwheel', self.__make_color_wheel())
-        ncols = len(colorwheel)
+        ncols = len(FlowToRGB.colorwheel)
 
         fu = data[:, :, 0]
         fv = data[:, :, 1]
@@ -72,8 +84,8 @@ class FlowToRGB(Filter):
         k1 = (k0 + 1) % ncols
         f = fk - k0
         for i in range(3):  # r g b
-            col0 = colorwheel[k0, i]/255.0
-            col1 = colorwheel[k1, i]/255.0
+            col0 = FlowToRGB.colorwheel[k0, i]/255.0
+            col1 = FlowToRGB.colorwheel[k1, i]/255.0
             col = np.multiply(1.0-f, col0) + np.multiply(f, col1)
 
             # increase saturation with radius

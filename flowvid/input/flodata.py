@@ -1,6 +1,7 @@
 import os
 import re
 import numpy as np
+from flowvid.core.filterable import Filterable
 from flowvid.input.fileinput import FileInput
 
 
@@ -9,7 +10,10 @@ TAG_FLOAT = 202021.25
 
 def _read_flow(file_path):
     """
-        TODO
+        :param file_path: File path of flo file
+        :returns: [h, w, 2] ndarray where
+                    [:, :, 0] = u (horizontal flow in pixels)
+                    [:, :, 1] = v (vertical flow in pixels)
     """
     with open(file_path, 'rb') as file:
         tag = np.frombuffer(file.read(4), dtype=np.float32, count=1)[0]
@@ -32,7 +36,12 @@ def _read_flow(file_path):
 
 
 class FloData(FileInput):
+    """ Flow data (.flo) reader """
+
+    def get_type(self):
+        return 'flo'
 
     def _getitem(self, index):
-        # TODO el index esta dentro de source
+        if index < 0 or index >= len(self):
+            raise IndexError('Index out of range')
         return _read_flow(self.source[index])

@@ -6,17 +6,6 @@ from flowvid.input.fileinput import FileInput
 class TrackRectangles(FileInput):
 
     def __init__(self, path, rect_format, elem_first, elem_total):
-        """
-            TODO
-            rect_format = 'p0 p1 p2 ...' where pi is:
-                - <x0>: left side
-                - <y0>: top side
-                - <x1>: right side
-                - <y1>: bottom side
-                - <xw>: rectangle width
-                - <yw>: rectangle height
-                - <-->: ignore field
-        """
         FileInput.__init__(self, path)
         self._points = self.__read_rectangles(
             self.source[0], rect_format, elem_first, elem_total)
@@ -24,8 +13,12 @@ class TrackRectangles(FileInput):
     def __len__(self):
         return self._points.shape[0]
 
+    def get_type(self):
+        return 'rect'
+
     def _getitem(self, index):
-        # TODO index dentro de _points
+        if index < 0 or index >= len(self):
+            raise IndexError('Index out of range')
         return self._points[index, :]
 
     @staticmethod

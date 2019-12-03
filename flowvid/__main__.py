@@ -2,6 +2,7 @@ import sys
 import numpy as np
 import flowvid as fv
 
+# TODO add argparse for video default options
 
 def ask_string(format_prompt, default):
     answer = input(format_prompt.format(s='default: ' + default))
@@ -67,7 +68,6 @@ elif video_type == 'rectangle_truth':
 
     rgb_data = fv.input.rgb(png_dir, dir_total=600)
     rect_data = fv.input.rect(track, rect_format='x0 y0 xw yw')
-    # drawrec = DrawRectangle()
     rgb_rect = fv.draw_rectangle(rgb_data, rect_data, color=[0, 255, 0])
 
     out = fv.output.video(out_name, framerate=framerate)

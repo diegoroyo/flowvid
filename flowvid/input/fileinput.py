@@ -5,6 +5,11 @@ from flowvid.core.filterable import Filterable
 
 
 class FileInput(Filterable):
+    """
+        Utility to read files and directories with required extensions
+        Only returns filenames, file processing should be done in a subclass
+    """
+
     def __init__(self, source, extensions=None, dir_first=None, dir_total=None):
         Filterable.__init__(self)
         if os.path.isfile(source) and (extensions is None or source.endswith(extensions)):
@@ -13,13 +18,26 @@ class FileInput(Filterable):
             self.source = (FileInput.__list_directory(
                 source, extensions, dir_first, dir_total))
         else:
-            raise AssertionError('Source does not exist')
+            raise AssertionError('Source ({s}) does not exist{extra}'.format(
+                s=source, extra='' if extensions is None else ' or doesn\'t contain files with extension {e}'.format(e=extensions)))
 
     def __len__(self):
         return len(self.source)
 
     @staticmethod
     def __list_directory(directory, extensions, dir_first, dir_total):
+        """
+            List all files in directory
+            :param directory: Directory to be checked
+            :param extensions: Filter file extensions from that type
+                               If None, don't filter extensions
+            :param dir_first: Get elements from that index
+                              (dir[dir_first:])
+            :param dir_total: Number of elements to retrieve (from dir_first)
+                              (dir[dir_first:dir_first+dir_total])
+                              If None, get all elements from the first one
+            :returns: List of filenames (strings)
+        """
         pattern = re.compile(r'\d+')
         name_list = [f for f in os.listdir(directory) if (
             extensions is None or f.endswith(extensions))]
