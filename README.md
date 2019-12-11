@@ -1,9 +1,7 @@
 <p align="center">
-  <!-- <a href="https://github.com/diegoroyo/flowvid">
-    <img src="https://via.placeholder.com/72" alt="Logo" width=72 height=72>
-  </a> -->
-
-  <h1 align="center">flowvid</h1>
+  <a href="https://github.com/diegoroyo/flowvid">
+    <img src="examples/logo_square.png" alt="Logo" width=250 height=250>
+  </a>
 
   <p align="center">
     Toolkit to generate customized visualizations related to optical flow <i>(beta 0.1.0)</i>
@@ -97,6 +95,8 @@ out.add_all(rgb_data)
 
 ## Acknowledgements
 
-Flow to RGB conversion is based on [C. Liu's work](https://people.csail.mit.edu/celiu/OpticalFlow/).
+* Logo made by Github user [Aeri (see profile)](https://github.com/aeri).
+
+* Flow to RGB conversion is based on [C. Liu's work](https://people.csail.mit.edu/celiu/OpticalFlow/).
 
 > C. Liu. Beyond Pixels: Exploring New Representations and Applications for Motion Analysis. Doctoral Thesis. Massachusetts Institute of Technology. May 2009.
