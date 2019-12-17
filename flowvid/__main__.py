@@ -43,7 +43,7 @@ if video_type == 'color_flow':
     out_name = ask_string(
         'Output video name ({s}): ', default='output_flo.mp4')
 
-    flo_data = fv.input.flo(flo_dir, dir_total=10)
+    flo_data = fv.input.flo(flo_dir)
     if norm_type == 'frame':
         flo_data = fv.normalize_frame(flo_data)
     elif norm_type == 'video':
@@ -53,5 +53,10 @@ if video_type == 'color_flow':
 
     out = fv.output.video(out_name, framerate=framerate)
     out.add_all(rgb_data, verbose=True)
+
+elif video_type == 'track_points':
+
+    raise NotImplementedError("TODO")
+
 else:
     raise NotImplementedError("Whoops.")

@@ -31,7 +31,7 @@ class Filterable:
         - If not, they should implement their own iterator and call _apply_filters(...)
         Filterables should also implement the get_type function and
         return a string from this list:
-        - flo, rgb, rect
+        - flo, rgb, rect, point
     """
 
     def __init__(self):
@@ -51,7 +51,7 @@ class Filterable:
             raise AssertionError('Data type is {d1} but was expected to be {d2}'.format(
                 d1=self.get_type(), d2=data_type))
         return True
-            
+
     def get_type(self):
         raise NotImplementedError("Whoops. Contact the owner of the repo.")
 

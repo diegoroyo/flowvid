@@ -4,7 +4,7 @@ from .base_operator import Operator
 
 
 class DrawRectangleIterator:
-    """ Iterates through DrawRectangle's flow data to generate all the images """
+    """ Iterates through DrawRectangle's rect data to generate all the images """
 
     def __init__(self, obj):
         self._iter = iter(zip(obj._image_data, obj._rect_data))
@@ -43,7 +43,7 @@ class DrawRectangle(Operator):
 
     def get_type(self):
         return 'rgb'
-        
+
     def __iter__(self):
         return DrawRectangleIterator(self)
 

@@ -1,6 +1,34 @@
 import numpy as np
 from numpy import genfromtxt
+from ..core.filterable import Filterable
 from .file_input import FileInput
+
+
+class TrackPoints(FileInput):
+
+    def __init__(self, points):
+        """ Constructor with custom points for one frame """
+        Filterable.__init__(self)
+        if not isinstance(points, np.ndarray):
+            raise AssertionError('Points should be a [n, 2] ndarray')
+        else:
+            n = points.shape[0]
+            points = np.reshape(points, (1, n, 2))
+        if points.ndim != 3 or points.shape[2] != 2:
+            raise AssertionError(
+                'Points should be a [n, 2] ndarray but it has shape {s}'.format(s=points.shape))
+        self._points = points
+
+    def __len__(self):
+        return self._points.shape[0]
+
+    def get_type(self):
+        return 'point'
+
+    def _getitem(self, index):
+        if index < 0 or index >= len(self):
+            raise IndexError('Index out of range')
+        return self._points[index, :]
 
 
 class TrackRectangles(FileInput):

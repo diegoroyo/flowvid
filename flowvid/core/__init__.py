@@ -7,7 +7,9 @@ from .filters.normalize_flow import NormalizeFrame, NormalizeVideo
 from .conversion.flow_to_rgb import FlowToRGB
 
 from .operators.add_flow_rect import AddFlowRect
+from .operators.add_flow_points import AddFlowPoints
 from .operators.draw_rectangle import DrawRectangle
+from .operators.draw_points import DrawPoints
 
 
 """
@@ -67,10 +69,24 @@ def draw_rectangle(image, rect, color=[255, 0, 0]):
         Operator. Given a list of images and rectangles,
         draw each rectangle in each of the images from the image list
         :param image: List of rgb data, see fv.input.rgb(...)
-        :param rect: List of rect data, see fv.input.rect((...)
+        :param rect: List of rect data, see fv.input.rect(...)
+        :param color: [r, g, b] list, color of the rectangle (default: red)
         :returns: Iterable object with all the images, with each rectangle drawn
     """
     return DrawRectangle(image, rect, color)
+
+
+def draw_points(image, points, color='random'):
+    """
+        Operator. Given a list of images and sets of points,
+        draw each set of points in each of the images from the image list
+        :param image: List of rgb data, see fv.input.rgb(...)
+        :param points: List of points data, see fv.input.points(...)
+        :param color: [r, g, b] list, color of the points. Can be 'random' so each point
+                      is of a random color (consistent between frames, default mode).
+        :returns: Iterable object with all the images, with each rectangle drawn
+    """
+    return DrawPoints(image, points, color)
 
 
 def add_flow_rect(rect, flow):
@@ -83,3 +99,15 @@ def add_flow_rect(rect, flow):
         :returns: Iterable object with all the rectangles
     """
     return AddFlowRect(rect, flow)
+
+
+def add_flow_points(points, flow):
+    """
+        Operator. Given a list of points (for one frame) and a
+        list of flow data, move the points with respect to the flow
+        in that pixel for each given flow frame
+        :param points: Set of points, [n, 2] ndarray (x, y)
+        :param flow: List of flow data, see fv.input.flo(...)
+        :returns: Iterable object with all the rectangles
+    """
+    return AddFlowPoints(points, flow)
