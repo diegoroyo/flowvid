@@ -76,7 +76,7 @@ def draw_rectangle(image, rect, color=[255, 0, 0]):
     return DrawRectangle(image, rect, color)
 
 
-def draw_points(image, points, color='random'):
+def draw_points(image, points, color='random', num_trail=1):
     """
         Operator. Given a list of images and sets of points,
         draw each set of points in each of the images from the image list
@@ -86,7 +86,7 @@ def draw_points(image, points, color='random'):
                       is of a random color (consistent between frames, default mode).
         :returns: Iterable object with all the images, with each rectangle drawn
     """
-    return DrawPoints(image, points, color)
+    return DrawPoints(image, points, color, num_trail)
 
 
 def add_flow_rect(rect, flow):
