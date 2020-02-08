@@ -31,7 +31,7 @@ class Filterable:
         - If not, they should implement their own iterator and call _apply_filters(...)
         Filterables should also implement the get_type function and
         return a string from this list:
-        - flo, rgb, rect, point
+        - flo, rgb, rect, point, float
     """
 
     def __init__(self):

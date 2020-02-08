@@ -10,6 +10,7 @@ from .operators.add_flow_rect import AddFlowRect
 from .operators.add_flow_points import AddFlowPoints
 from .operators.draw_rectangle import DrawRectangle
 from .operators.draw_points import DrawPoints
+from .operators.endpoint_error import EndPointError
 
 
 """
@@ -111,3 +112,14 @@ def add_flow_points(points, flow):
         :returns: Iterable object with all the rectangles
     """
     return AddFlowPoints(points, flow)
+
+
+def endpoint_error(flow_est, flow_gt):
+    """
+        Operator. Given estimated flow data and its ground truth,
+        calculate Average Endpoint Error for all frames
+        :param flow_est: Estimated flow, see fv.input.flo(...)
+        :param flow_gt: Flow ground truth, see fv.input.flo(...)
+        :returns: Iterable object with EPE per pixel and frame
+    """
+    return EndPointError(flow_est, flow_gt)
