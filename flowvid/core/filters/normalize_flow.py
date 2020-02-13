@@ -42,7 +42,7 @@ class NormalizeVideo(Filter):
         flow_data.assert_type('flo')
         self._max = NormalizeVideo.__find_max_flow(flow_data)
         self._clamp = self._max * clamp_pct
-        self._gamma = gamma
+        self._gamma = 1.0 / gamma
 
     @staticmethod
     def __find_max_flow(flow_data):
