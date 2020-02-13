@@ -46,7 +46,7 @@ class EndPointError(Operator):
     def __iter__(self):
         return EndPointErrorIterator(self)
 
-    def _get_aee(self, flow_est, flow_gt):
+    def _get_epe(self, flow_est, flow_gt):
         """
             :param flow_est: [h, w, 2] (u, v components)
                              estimated flow vectors
