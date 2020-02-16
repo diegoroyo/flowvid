@@ -2,62 +2,44 @@ from ..core.filters.base_filter import Filter
 import copy
 
 
-class FilterableIterator:
-    """
-        Basic indexing operator (iterates through element [0], [1], etc.)
-    """
-
-    def __init__(self, obj):
-        self._index = -1
-        self._max = len(obj)
-        self._obj = obj
-
-    def __next__(self):
-        self._index = self._index + 1
-        if self._index == self._max:
-            raise StopIteration
-        return self._obj[self._index]
-
-
 class Filterable:
     """
         Base class for inputs and operators.
         Filterable means iterable list of data (from an input or operator)
-        where filters can be applied on iterations.
-        Filterables should implement the __len__ function and:
-        - If a filterable's items can be indexed independently (i.e. element
-          number i does not need element i-1 for its calculations) the subclass
-          should implement the _getitem function.
-        - If not, they should implement their own iterator and call _apply_filters(...)
-        Filterables should also implement the get_type function and
-        return a string from this list:
-        - flo, rgb, rect, point, float
+          where filters can be applied on iterations.
+        Filterables should implement the following:
+        - _items
+        - __len__
+        - get_type, which should return a string from this list:
+            * flo, rgb, rect, point, float
+        Optionally, it can also implement the __getitem__ function
+          if the elements can be indexed
     """
 
     def __init__(self):
         self._filters = []
 
     def __iter__(self):
-        return FilterableIterator(self)
+        return (self._apply_filters(item) for item in self._items())
+
+    def _items(self):
+        raise NotImplementedError("Whoops. Contact the owner of the repo.")
 
     def __len__(self):
         raise NotImplementedError("Whoops. Contact the owner of the repo.")
 
+    def get_type(self):
+        raise NotImplementedError("Whoops. Contact the owner of the repo.")
+
     def __getitem__(self, index):
-        return self._apply_filters(self._getitem(index))
+        raise TypeError("'{s}' object can't be indexed, use an iterator instead".format(
+            s=self.__class__.__name__))
 
     def assert_type(self, data_type):
         if data_type != self.get_type():
             raise AssertionError('Data type is {d1} but was expected to be {d2}'.format(
                 d1=self.get_type(), d2=data_type))
         return True
-
-    def get_type(self):
-        raise NotImplementedError("Whoops. Contact the owner of the repo.")
-
-    def _getitem(self, index):
-        raise NotImplementedError(
-            'Either this is not implemented or you should use an iterator instead')
 
     def _add_filter(self, new_filter):
         """

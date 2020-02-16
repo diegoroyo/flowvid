@@ -3,18 +3,6 @@ from ..filterable import Filterable
 from .base_operator import Operator
 
 
-class DrawRectangleIterator:
-    """ Iterates through DrawRectangle's rect data to generate all the images """
-
-    def __init__(self, obj):
-        self._iter = iter(zip(obj._image_data, obj._rect_data))
-        self._obj = obj
-
-    def __next__(self):
-        (image, rect) = next(self._iter)
-        return self._obj._draw(image, rect)
-
-
 class DrawRectangle(Operator):
     """
         Given a list of images and rectangles, draw each rectangle in each
@@ -38,14 +26,14 @@ class DrawRectangle(Operator):
         self._rect_data = rect_data
         self._color = color
 
+    def _items(self):
+        return (self._draw(image, rect) for image, rect in zip(self._image_data, self._rect_data))
+
     def __len__(self):
-        return len(self._rect_data)
+        return min(len(self._image_data), len(self._rect_data))
 
     def get_type(self):
         return 'rgb'
-
-    def __iter__(self):
-        return DrawRectangleIterator(self)
 
     def _draw(self, image, rect):
         """
@@ -53,7 +41,6 @@ class DrawRectangle(Operator):
             :param rect: [4] ndarray (x0 y0 x1 y1)
             :returns: image with modified RGB such that rect is drawn with self._color
         """
-
         # Clamping
         [h, w] = image.shape[0:2]
         [x0, y0, x1, y1] = rect.astype(int)

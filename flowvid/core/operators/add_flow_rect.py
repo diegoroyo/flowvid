@@ -1,20 +1,8 @@
 import numpy as np
 from ..filterable import Filterable
+from ..filters.accum_flow import AccumFlow
+from ..util.add_flow import add_flow_points
 from .base_operator import Operator
-
-
-class AddFlowRectIterator:
-    """ Iterates through AddFlowRect's flow data to generate all the rectangles """
-
-    def __init__(self, obj):
-        self._obj = obj
-        self._rect = obj._rect
-        self._iter = iter(obj._flow_data)
-
-    def __next__(self):
-        flow = next(self._iter)
-        self._rect = self._obj._add(self._rect, flow)
-        return self._obj._apply_filters(self._rect)
 
 
 class AddFlowRect(Operator):
@@ -23,7 +11,7 @@ class AddFlowRect(Operator):
         respect to the flow in that pixel for each given flow frame
     """
 
-    def __init__(self, rect, flow_data):
+    def __init__(self, rect, flow_data, interpolate):
         if not isinstance(rect, np.ndarray):
             raise AssertionError('rect should be a size 4 ndarray')
         if rect.ndim != 1 or rect.size != 4:
@@ -34,18 +22,22 @@ class AddFlowRect(Operator):
                 'flow_data should contain a list of flow data')
         flow_data.assert_type('flo')
         Operator.__init__(self)
-        self._rect = rect
+        self._rect = rect.astype(float)
         self._flow_data = flow_data
+        self._interpolate = interpolate
         [self._h, self._w] = flow_data[0].shape[0:2]
 
+    def _items(self):
+        yield self._rect
+        for flow in self._flow_data:
+            self._rect = self._add(self._rect, flow)
+            yield self._rect
+
     def __len__(self):
-        return len(self._flow_data)
+        return 1 + len(self._flow_data)
 
     def get_type(self):
         return 'rect'
-
-    def __iter__(self):
-        return AddFlowRectIterator(self)
 
     def _add(self, rect, flow):
         """
@@ -54,10 +46,4 @@ class AddFlowRect(Operator):
                         where (x0, y0) += flow[x0, y0]
                           and (x1, y1) += flow[x1, y1]
         """
-        x0 = int(np.clip(rect[0], 0, self._w))
-        y0 = int(np.clip(rect[1], 0, self._h))
-        x1 = int(np.clip(rect[2], 0, self._w))
-        y1 = int(np.clip(rect[3], 0, self._h))
-        add = [flow[y0, x0, 0], flow[y0, x0, 1],
-               flow[y1, x1, 0], flow[y1, x1, 1]]
-        return rect + add
+        return add_flow_points(flow, rect.reshape((2, 2)), self._interpolate).flatten()

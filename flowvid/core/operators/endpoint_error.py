@@ -3,21 +3,6 @@ from ..filterable import Filterable
 from .base_operator import Operator
 
 
-class EndPointErrorIterator:
-    """ Iterates through EndPointError's AEE data to generate all the values """
-
-    def __init__(self, obj):
-        self._obj = obj
-        self._iter_est = iter(obj._flow_est)
-        self._iter_gt = iter(obj._flow_gt)
-
-    def __next__(self):
-        flow_est = next(self._iter_est)
-        flow_gt = next(self._iter_gt)
-        self._epe = self._obj._get_epe(flow_est, flow_gt)
-        return self._obj._apply_filters(self._epe)
-
-
 class EndPointError(Operator):
     """
         Calculate Endpoint Error for each frame, comparing
@@ -31,20 +16,23 @@ class EndPointError(Operator):
         if not isinstance(flow_gt, Filterable):
             raise AssertionError(
                 'flow_gt should contain a list of flow data')
+        if len(flow_est) != len(flow_gt):
+            raise AssertionError(
+                'flow_est and flow_gt should be of the same length')
         flow_est.assert_type('flo')
         flow_gt.assert_type('flo')
         Operator.__init__(self)
         self._flow_est = flow_est
         self._flow_gt = flow_gt
 
+    def _items(self):
+        return (self._get_epe(est, gt) for (est, gt) in zip(self._flow_est, self._flow_gt))
+
     def __len__(self):
         return len(self._flow_est)
 
     def get_type(self):
         return 'float'
-
-    def __iter__(self):
-        return EndPointErrorIterator(self)
 
     def _get_epe(self, flow_est, flow_gt):
         """

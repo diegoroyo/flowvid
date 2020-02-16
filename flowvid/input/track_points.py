@@ -19,13 +19,16 @@ class TrackPoints(FileInput):
                 'Points should be a [n, 2] ndarray but it has shape {s}'.format(s=points.shape))
         self._points = points
 
+    def _items(self):
+        return (self._points[i, :] for i in range(len(self._points)))
+
     def __len__(self):
         return self._points.shape[0]
 
     def get_type(self):
         return 'point'
 
-    def _getitem(self, index):
+    def __getitem__(self, index):
         if index < 0 or index >= len(self):
             raise IndexError('Index out of range')
         return self._points[index, :]
@@ -38,13 +41,16 @@ class TrackRectangles(FileInput):
         self._points = self.__read_rectangles(
             self.source[0], rect_format, elem_first, elem_total)
 
+    def _items(self):
+        return (self._points[i, :] for i in range(len(self._points)))
+
     def __len__(self):
         return self._points.shape[0]
 
     def get_type(self):
         return 'rect'
 
-    def _getitem(self, index):
+    def __getitem__(self, index):
         if index < 0 or index >= len(self):
             raise IndexError('Index out of range')
         return self._points[index, :]

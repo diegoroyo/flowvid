@@ -3,6 +3,7 @@ import numpy as np
 from .filterable import Filterable
 
 from .filters.normalize_flow import NormalizeFrame, NormalizeVideo
+from .filters.accum_flow import AccumFlow
 
 from .conversion.flow_to_rgb import FlowToRGB
 
@@ -44,6 +45,20 @@ def normalize_video(flow, clamp_pct=1.0, gamma=1.0):
         raise AssertionError('flow should be a flow data list')
     return flow._add_filter(NormalizeVideo(flow, clamp_pct, gamma))
 
+
+def accumulate(flow, interpolate=True):
+    """
+        Accumulate optical flow from first frame, so instead
+        of it being from images 0->1, 1->2, 2->3, etc. it goes
+        from images 0->1, 0->2, 0->3, etc.
+        :param flow: List of flow data, see fv.input.flo(...)
+        :param interpolate: If true, flow in a point is added by interpolating from its
+                            four closest pixels. If false, it only uses the closest pixel.
+        :returns: List of flow data, accumulated from the first frame.
+    """
+    if not isinstance(flow, Filterable):
+        raise AssertionError('flow should be a flow data list')
+    return flow._add_filter(AccumFlow(flow, interpolate))
 
 """
     Conversion
@@ -90,7 +105,7 @@ def draw_points(image, points, color='random', num_trail=1):
     return DrawPoints(image, points, color, num_trail)
 
 
-def add_flow_rect(rect, flow):
+def add_flow_rect(rect, flow, interpolate=True):
     """
         Operator. Given one rectangle and a list of flow data,
         move the rectangle with respect to the flow in that pixel
@@ -99,10 +114,10 @@ def add_flow_rect(rect, flow):
         :param flow: List of flow data, see fv.input.flo(...)
         :returns: Iterable object with all the rectangles
     """
-    return AddFlowRect(rect, flow)
+    return AddFlowRect(rect, flow, interpolate)
 
 
-def add_flow_points(points, flow):
+def add_flow_points(points, flow, interpolate=True):
     """
         Operator. Given a list of points (for one frame) and a
         list of flow data, move the points with respect to the flow
@@ -111,7 +126,7 @@ def add_flow_points(points, flow):
         :param flow: List of flow data, see fv.input.flo(...)
         :returns: Iterable object with all the rectangles
     """
-    return AddFlowPoints(points, flow)
+    return AddFlowPoints(points, flow, interpolate)
 
 
 def endpoint_error(flow_est, flow_gt):

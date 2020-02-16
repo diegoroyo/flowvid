@@ -42,7 +42,7 @@ class NormalizeVideo(Filter):
         flow_data.assert_type('flo')
         self._max = NormalizeVideo.__find_max_flow(flow_data)
         self._clamp = self._max * clamp_pct
-        self._gamma = 1.0 / gamma
+        self._inv_gamma = 1.0 / gamma
 
     @staticmethod
     def __find_max_flow(flow_data):
@@ -52,6 +52,7 @@ class NormalizeVideo(Filter):
             :returns: Largest flow vector module in flow_data
         """
         fmax = 0.0
+        print('Applying normalization to the whole video...')
         for flow in flow_data:
             fu = flow[:, :, 0]
             fv = flow[:, :, 1]
@@ -73,12 +74,12 @@ class NormalizeVideo(Filter):
         idu = fu > self._clamp
         fu[idu] = 1
         fu[~idu] = fu[~idu] / self._clamp
-        fu[~idu] = np.sign(fu[~idu]) * (np.abs(fu[~idu]) ** self._gamma)
+        fu[~idu] = np.sign(fu[~idu]) * (np.abs(fu[~idu]) ** self._inv_gamma)
 
         idv = fv > self._clamp
         fv[idv] = 1
         fv[~idv] = fv[~idv] / self._clamp
-        fv[~idv] = np.sign(fv[~idv]) * (np.abs(fv[~idv]) ** self._gamma)
+        fv[~idv] = np.sign(fv[~idv]) * (np.abs(fv[~idv]) ** self._inv_gamma)
 
         data[:, :, 0] = fu
         data[:, :, 1] = fv

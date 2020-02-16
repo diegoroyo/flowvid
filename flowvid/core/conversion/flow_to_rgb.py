@@ -35,8 +35,8 @@ class FlowToRGB(Filterable):
 
         self._flo_data = flo_data
 
-    def __iter__(self):
-        return FlowToRGBIterator(self)
+    def _items(self):
+        return (FlowToRGB._flow_to_rgb(flo) for flo in self._flo_data)
 
     def __len__(self):
         return len(self._flo_data)

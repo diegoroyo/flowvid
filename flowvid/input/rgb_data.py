@@ -15,10 +15,13 @@ def _read_image(file_path):
 class RGBData(FileInput):
     """ Image data (.png, etc.) reader, wrapper for imread """
 
+    def _items(self):
+        return (_read_image(filename) for filename in self.source)
+
     def get_type(self):
         return 'rgb'
 
-    def _getitem(self, index):
+    def __getitem__(self, index):
         if index < 0 or index >= len(self):
             raise IndexError('Index out of range')
         return _read_image(self.source[index])
