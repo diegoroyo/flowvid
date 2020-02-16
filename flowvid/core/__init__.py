@@ -12,6 +12,7 @@ from .operators.add_flow_points import AddFlowPoints
 from .operators.draw_rectangle import DrawRectangle
 from .operators.draw_points import DrawPoints
 from .operators.endpoint_error import EndPointError
+from .operators.track_from_first import TrackFromFirst
 
 
 """
@@ -138,3 +139,14 @@ def endpoint_error(flow_est, flow_gt):
         :returns: Iterable object with EPE per pixel and frame
     """
     return EndPointError(flow_est, flow_gt)
+
+
+def track_from_first(point_data, image_data, color='random', draw_lines=True):
+    """
+        Operator. Given a set of points and image data, track the set
+        of points to see if they track the image's features correctly
+        :param point_data: List of points data, see fv.input.points(...)
+        :param image_data: List of rgb data, see fv.input.rgb(...)
+        :returns: List of images with features' correspondences
+    """
+    return TrackFromFirst(point_data, image_data, color, draw_lines)

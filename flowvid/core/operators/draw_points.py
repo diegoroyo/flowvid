@@ -1,7 +1,7 @@
 import numpy as np
 import random
 from ..filterable import Filterable
-from ..util.image_draw import draw_line
+from ..util.image_draw import get_color, draw_points, draw_line
 from .base_operator import Operator
 
 
@@ -10,12 +10,6 @@ class DrawPoints(Operator):
         Given a list of images and points, draw each set of points in each
         of the images from the image list
     """
-
-    _random_colors = [[255, 255, 255], [0, 0, 255], [0, 255, 255], [255, 0, 0],
-                      [255, 255, 0], [200, 200, 200], [0, 0, 200], [0, 0, 150],
-                      [150, 150, 150], [150, 0, 0], [200, 0, 0], [0, 200, 200]]
-    # _random_colors = [[255, 0, 0], [128, 128, 0], [0, 255, 0],
-    #                   [0, 128, 128], [0, 0, 255], [128, 0, 128]]
 
     def __init__(self, image_data, point_data, color, num_trail):
         if not isinstance(image_data, Filterable):
@@ -57,15 +51,12 @@ class DrawPoints(Operator):
                 if last_points is not None:
                     # Line between curr and last point
                     for i, (p0, p1) in enumerate(zip(last_points, curr_points)):
-                        color = self._color
-                        if self._color == 'random':
-                            ind = i % len(DrawPoints._random_colors)
-                            color = DrawPoints._random_colors[ind]
+                        color = get_color(self._color, i)
                         line = np.reshape([p0, p1], (2, 2))
                         draw_line(image, line, color)
 
                 last_points = curr_points
-            image = self._draw_point(image, trail[-1], cross=True)
+            image = draw_points(image, trail[-1], self._color, cross=True)
             yield image
 
     def __len__(self):
@@ -73,36 +64,3 @@ class DrawPoints(Operator):
 
     def get_type(self):
         return 'rgb'
-
-    def _draw_point(self, image, points, cross=False):
-        """
-            :param image: [h, w, 3] rgb data
-            :param points: [n, 2] ndarray (x, y)
-            :returns: image with modified RGB such that points are drawn with self._color
-                      Note: if self_color == 'random', a different color is chosen for
-                            each point (but each color is consistent between frames)
-        """
-
-        # Clamping
-        [h, w] = image.shape[0:2]
-        points = points.astype(int)
-        points[:, 0] = np.clip(points[:, 0], 1, w - 2)
-        points[:, 1] = np.clip(points[:, 1], 1, h - 2)
-
-        # Drawing
-        for i, [px, py] in enumerate(points):
-            # Get color
-            color = self._color
-            if self._color == 'random':
-                ind = i % len(DrawPoints._random_colors)
-                color = DrawPoints._random_colors[ind]
-            # Draw point as a small cross
-            image[py, px, :] = color
-            if cross:
-                # no need to check for bounds
-                image[py, px - 1, :] = color
-                image[py, px + 1, :] = color
-                image[py - 1, px, :] = color
-                image[py + 1, px, :] = color
-
-        return image

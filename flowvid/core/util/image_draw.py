@@ -1,6 +1,48 @@
 import numpy as np
 
 
+_random_colors = [[255, 255, 255], [0, 0, 255], [0, 255, 255], [255, 0, 0],
+                  [255, 255, 0], [200, 200, 200], [0, 0, 200], [0, 0, 150],
+                  [150, 150, 150], [150, 0, 0], [200, 0, 0], [0, 200, 200]]
+
+
+def get_color(color, i):
+    if color == 'random':
+        return _random_colors[i % len(_random_colors)]
+    else:
+        return color
+
+
+def draw_points(image, points, color, cross=True):
+    """
+        :param image: [h, w, 3] rgb data
+        :param points: [n, 2] ndarray (x, y)
+        :returns: image with modified RGB such that points are drawn with color
+                  Note: if color == 'random', a different color is chosen for
+                  each point (but each color is consistent between frames)
+    """
+    # Clamping
+    [h, w] = image.shape[0:2]
+    points = points.astype(int)
+    points[:, 0] = np.clip(points[:, 0], 1, w - 2)
+    points[:, 1] = np.clip(points[:, 1], 1, h - 2)
+
+    # Drawing
+    for i, [px, py] in enumerate(points):
+        # Get color
+        point_color = get_color(color, i)
+        # Draw point as a small cross
+        image[py, px, :] = point_color
+        if cross:
+            # no need to check for bounds
+            image[py, px - 1, :] = point_color
+            image[py, px + 1, :] = point_color
+            image[py - 1, px, :] = point_color
+            image[py + 1, px, :] = point_color
+
+    return image
+
+
 def draw_line(image, line, color):
     """
         :param image: [h, w, 3] rgb data
