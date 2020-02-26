@@ -13,6 +13,7 @@ from .operators.draw_rectangle import DrawRectangle
 from .operators.draw_points import DrawPoints
 from .operators.endpoint_error import EndPointError
 from .operators.track_from_first import TrackFromFirst
+from .operators.synthesize_image import SynthesizeImage
 
 
 """
@@ -60,6 +61,7 @@ def accumulate(flow, interpolate=True):
     if not isinstance(flow, Filterable):
         raise AssertionError('flow should be a flow data list')
     return flow._add_filter(AccumFlow(flow, interpolate))
+
 
 """
     Conversion
@@ -141,7 +143,7 @@ def endpoint_error(flow_est, flow_gt):
     return EndPointError(flow_est, flow_gt)
 
 
-def track_from_first(point_data, image_data, color='random', draw_lines=True):
+def track_from_first(point_data, image_data, color='random', draw_lines=True, vertical=False):
     """
         Operator. Given a set of points and image data, track the set
         of points to see if they track the image's features correctly
@@ -149,4 +151,15 @@ def track_from_first(point_data, image_data, color='random', draw_lines=True):
         :param image_data: List of rgb data, see fv.input.rgb(...)
         :returns: List of images with features' correspondences
     """
-    return TrackFromFirst(point_data, image_data, color, draw_lines)
+    return TrackFromFirst(point_data, image_data, color, draw_lines, vertical)
+
+
+def synthesize_image(image, accum_flow_data):
+    """
+        Operator. Given an initial image and accumulated flow,
+        generate synthesized images moving the pixels according to the flow
+        :param image: Image, ndarray with [height, width, 3] RGB shape
+        :param accum_flow_data: List of accumulated flow, see fv.accumulate(...)
+        :returns: List of synthesized images from the first one
+    """
+    return SynthesizeImage(image, accum_flow_data)

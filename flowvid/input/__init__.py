@@ -1,6 +1,7 @@
 from .flo_data import FloData
 from .rgb_data import RGBData
 from .track_points import TrackPoints, TrackRectangles
+from .point_input import pyplot_prompt
 
 
 def flo(path, dir_first=0, dir_total=None):
@@ -44,6 +45,18 @@ def points(custom_points):
         :returns: Iterable and indexable object with 1 set of points
     """
     return TrackPoints(custom_points)
+
+
+def prompt_points(n, image):
+    """
+        Prompt the user to select points on a given image
+        :param n: Number of points to select
+        :param image: Image background to select the points from. Either:
+                      - (height, width) tuple for an empty image
+                      - (height, width, 3) RGB ndarray for an image (see fv.input.rgb(...))
+        :returns: Iterable and indexable object with 1 set of points
+    """
+    return TrackPoints(pyplot_prompt(n, image))
 
 
 def rect(path, rect_format='x0 y0 xw yw', elem_first=0, elem_total=None):

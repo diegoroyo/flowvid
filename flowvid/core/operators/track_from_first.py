@@ -11,7 +11,7 @@ class TrackFromFirst(Operator):
         to see if they track the image's features correctly
     """
 
-    def __init__(self, point_data, image_data, color, draw_lines):
+    def __init__(self, point_data, image_data, color, draw_lines, vertical):
         if not isinstance(point_data, Filterable):
             raise AssertionError(
                 'point_data should contain a list of point data')
@@ -25,14 +25,20 @@ class TrackFromFirst(Operator):
         self._image_data = image_data
         self._color = color
         self._draw_lines = draw_lines
+        self._vertical = vertical
 
     def _items(self):
         first_point = copy.copy(next(iter(self._point_data)))
         first_image = next(iter(self._image_data))
-        width = first_image.shape[1]
+        height, width = first_image.shape[0:2]
         for curr_point, image in zip(self._point_data, self._image_data):
-            concat_image = np.concatenate((first_image, image), axis=1)
-            curr_point = curr_point + np.array([width, 0])
+            axis = 1  # cols
+            if self._vertical:
+                axis = 0  # rows
+                curr_point = curr_point + np.array([0, height])
+            else:
+                curr_point = curr_point + np.array([width, 0])
+            concat_image = np.concatenate((first_image, image), axis=axis)
             draw_points(concat_image, first_point, self._color, cross=True)
             draw_points(concat_image, curr_point, self._color, cross=True)
             if self._draw_lines:
