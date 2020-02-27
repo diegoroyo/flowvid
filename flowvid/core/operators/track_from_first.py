@@ -1,5 +1,5 @@
+import matplotlib.pyplot as plt
 import numpy as np
-import copy
 from ..filterable import Filterable
 from ..util.image_draw import get_color, draw_points, draw_line
 from .base_operator import Operator
@@ -29,25 +29,35 @@ class TrackFromFirst(Operator):
         self._svg = svg
 
     def _items(self):
-        first_point = copy.copy(next(iter(self._point_data)))
+        first_point = next(iter(self._point_data))
         first_image = next(iter(self._image_data))
         height, width = first_image.shape[0:2]
         for curr_point, image in zip(self._point_data, self._image_data):
-            axis = 1  # cols
             if self._vertical:
                 axis = 0  # rows
                 curr_point = curr_point + np.array([0, height])
             else:
+                axis = 1  # cols
                 curr_point = curr_point + np.array([width, 0])
             concat_image = np.concatenate((first_image, image), axis=axis)
-            draw_points(concat_image, first_point, self._color, cross=True)
-            draw_points(concat_image, curr_point, self._color, cross=True)
-            if self._draw_lines:
-                for i, (p0, p1) in enumerate(zip(first_point, curr_point)):
-                    color = get_color(self._color, i)
-                    draw_line(concat_image, np.reshape(
-                        (p0, p1), (2, 2)), color)
-            yield concat_image
+            if self._svg:
+                plt.imshow(concat_image)
+                plt.scatter(first_point[:, 0], first_point[:, 1], marker='+', c='r')
+                plt.scatter(curr_point[:, 0], curr_point[:, 1], marker='+', c='b')
+                if self._draw_lines:
+                    for i, (p0, p1) in enumerate(zip(first_point, curr_point)):
+                        color = get_color(self._color, i)
+                        plt.plot([p0[0], p1[0]], [p0[1], p1[1]])
+                yield None
+            else:
+                draw_points(concat_image, first_point, self._color, cross=True)
+                draw_points(concat_image, curr_point, self._color, cross=True)
+                if self._draw_lines:
+                    for i, (p0, p1) in enumerate(zip(first_point, curr_point)):
+                        color = get_color(self._color, i)
+                        draw_line(concat_image, np.reshape(
+                            (p0, p1), (2, 2)), color)
+                yield concat_image
 
     def __len__(self):
         return min(len(self._point_data), len(self._image_data))
