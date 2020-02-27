@@ -33,7 +33,7 @@ def normalize_frame(flow):
     return flow._add_filter(NormalizeFrame())
 
 
-def normalize_video(flow, clamp_pct=1.0, gamma=1.0):
+def normalize_video(flow, clamp_pct=1.0, gamma=1.0, verbose=False):
     """
         Normalize flow (so module ranges from 0..1 instead of 0..n)
         with the video's maximum. Can also apply a gamma curve with
@@ -41,11 +41,12 @@ def normalize_video(flow, clamp_pct=1.0, gamma=1.0):
         :param flow: List of flow data, see fv.input.flo(...)
         :param clamp_pct: Modules higher than max * clamp_pct are clamped to 1
         :param gamma: Exponential curve (module01 = module01 ** gamma)
+        :param verbose: Log console messages for progress
         :returns: List of flow data, normalized.
     """
     if not isinstance(flow, Filterable):
         raise AssertionError('flow should be a flow data list')
-    return flow._add_filter(NormalizeVideo(flow, clamp_pct, gamma))
+    return flow._add_filter(NormalizeVideo(flow, clamp_pct, gamma, verbose))
 
 
 def accumulate(flow, interpolate=True):

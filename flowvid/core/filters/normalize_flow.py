@@ -32,7 +32,7 @@ class NormalizeVideo(Filter):
         clamping to compensate if there's a high point
     """
 
-    def __init__(self, flow_data, clamp_pct, gamma):
+    def __init__(self, flow_data, clamp_pct, gamma, verbose):
         Filter.__init__(self)
         if not isinstance(flow_data, Filterable):
             raise AssertionError('Invalid flow data passed to NormalizeVideo')
@@ -43,6 +43,7 @@ class NormalizeVideo(Filter):
         self._max = NormalizeVideo.__find_max_flow(flow_data)
         self._clamp = self._max * clamp_pct
         self._inv_gamma = 1.0 / gamma
+        self._verbose = verbose
 
     @staticmethod
     def __find_max_flow(flow_data):
@@ -52,7 +53,8 @@ class NormalizeVideo(Filter):
             :returns: Largest flow vector module in flow_data
         """
         fmax = 0.0
-        print('Applying normalization to the whole video...')
+        if self._verbose:
+            print('Applying normalization to the whole video...')
         for flow in flow_data:
             fu = flow[:, :, 0]
             fv = flow[:, :, 1]

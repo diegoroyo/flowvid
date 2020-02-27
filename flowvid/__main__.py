@@ -48,7 +48,7 @@ if video_type == 'color_flow':
         flo_data = fv.normalize_frame(flo_data)
     elif norm_type == 'video':
         flo_data = fv.normalize_video(
-            flo_data, clamp_pct=clamp_pct, gamma=gamma)
+            flo_data, clamp_pct=clamp_pct, gamma=gamma, verbose=True)
     rgb_data = fv.flow_to_rgb(flo_data)
 
     out = fv.output.video(out_name, framerate=framerate)
