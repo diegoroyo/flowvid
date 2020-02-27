@@ -8,37 +8,30 @@ def _clip(flow, px, py):
     return px, py
 
 
-def _weight(fx, fy, px, py):
-    return (2 - abs(fx - px) - abs(fy - py)) / 4
-
-
-def _weight_flow(flow, fx, fy, px, py):
+def _clip_flow(flow, px, py):
     cx, cy = _clip(flow, px, py)
-    return _weight(fx, fy, px, py) * flow[cy, cx, :]
+    return flow[cy, cx, :]
 
 
 def _interpolate_flow(flow, fx, fy):
-    ox, oy = int(fx) + 0.5, int(fy) + 0.5
-    px, py = ox, oy
-    # closest pixel (same as non-interpolation)
-    vec = _weight_flow(flow, fx, fy, ox, oy)
-    # pixel up/down
+    px, py = int(fx) + 0.5, int(fy) + 0.5
+    # get (x1, y1), (x2, y2) bounding square
     if fy - int(fy) > 0.5:
-        vec = vec + _weight_flow(flow, fx, fy, px, py + 1)
+        y1 = py
     else:
-        vec = vec + _weight_flow(flow, fx, fy, px, py - 1)
-    # two pixels to the left/right
+        y1 = py - 1
     if fx - int(fx) > 0.5:
-        px = px + 1
+        x1 = px
     else:
-        px = px - 1
-    vec = vec + _weight_flow(flow, fx, fy, px, py)
-    if fy - int(fy) > 0.5:
-        vec = vec + _weight_flow(flow, fx, fy, px, py + 1)
-    else:
-        vec = vec + _weight_flow(flow, fx, fy, px, py - 1)
-    # return weighted interpolated flow
-    return vec
+        x1 = px - 1
+    x2 = x1 + 1
+    y2 = y1 + 1
+    # bilinear interpolation
+    t1 = _clip_flow(flow, x1, y1) * (x2 - fx) * (y2 - fy)
+    t2 = _clip_flow(flow, x1, y2) * (x2 - fx) * (fy - y1)
+    t3 = _clip_flow(flow, x2, y1) * (fx - x1) * (y2 - fy)
+    t4 = _clip_flow(flow, x2, y2) * (fx - x1) * (fy - y1)
+    return t1 + t2 + t3 + t4
 
 
 def add_flows(flow1, flow2, interpolate):
