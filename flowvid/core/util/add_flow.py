@@ -64,10 +64,11 @@ def add_flow_points(flow, points, interpolate):
         :returns: [n, 2] ndarray with the moved points
                     where (x, y) += flow[x, y]
     """
+    new_points = np.empty(points.shape)
     for i, point in enumerate(points):
         if interpolate:
-            points[i, :] = point + _interpolate_flow(flow, point[0], point[1])
+            new_points[i, :] = point + _interpolate_flow(flow, point[0], point[1])
         else:
             cx, cy = _clip(flow, point[0], point[1])
-            points[i, :] = point + flow[cy, cx, :]
-    return points
+            new_points[i, :] = point + flow[cy, cx, :]
+    return new_points

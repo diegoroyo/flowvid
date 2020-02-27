@@ -11,7 +11,7 @@ class AddFlowRect(Operator):
         respect to the flow in that pixel for each given flow frame
     """
 
-    def __init__(self, rect, flow_data, interpolate):
+    def __init__(self, rect, flow_data, interpolate, accumulate):
         if not isinstance(rect, np.ndarray):
             raise AssertionError('rect should be a size 4 ndarray')
         if rect.ndim != 1 or rect.size != 4:
@@ -25,13 +25,16 @@ class AddFlowRect(Operator):
         self._rect = rect.astype(float)
         self._flow_data = flow_data
         self._interpolate = interpolate
+        self._accumulate = accumulate
         [self._h, self._w] = flow_data[0].shape[0:2]
 
     def _items(self):
         yield self._rect
         for flow in self._flow_data:
-            self._rect = self._add(self._rect, flow)
-            yield self._rect
+            new_rect = self._add(self._rect, flow)
+            if self._accumulate:
+                self._rect = new_rect
+            yield new_rect
 
     def __len__(self):
         return 1 + len(self._flow_data)

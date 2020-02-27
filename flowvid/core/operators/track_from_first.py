@@ -11,7 +11,7 @@ class TrackFromFirst(Operator):
         to see if they track the image's features correctly
     """
 
-    def __init__(self, point_data, image_data, color, draw_lines, vertical):
+    def __init__(self, point_data, image_data, color, draw_lines, vertical, svg):
         if not isinstance(point_data, Filterable):
             raise AssertionError(
                 'point_data should contain a list of point data')
@@ -26,6 +26,7 @@ class TrackFromFirst(Operator):
         self._color = color
         self._draw_lines = draw_lines
         self._vertical = vertical
+        self._svg = svg
 
     def _items(self):
         first_point = copy.copy(next(iter(self._point_data)))
@@ -52,4 +53,7 @@ class TrackFromFirst(Operator):
         return min(len(self._point_data), len(self._image_data))
 
     def get_type(self):
-        return 'rgb'
+        if self._svg:
+            return 'svg'
+        else:
+            return 'rgb'

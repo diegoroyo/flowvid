@@ -109,28 +109,32 @@ def draw_points(image, points, color='random', num_trail=1):
     return DrawPoints(image, points, color, num_trail)
 
 
-def add_flow_rect(rect, flow, interpolate=True):
+def add_flow_rect(rect, flow, interpolate=True, accumulate=True):
     """
         Operator. Given one rectangle and a list of flow data,
         move the rectangle with respect to the flow in that pixel
         for each given flow frame.
         :param rect: Rectangle, 4 element ndarray [x0, y0, x1, y1]
         :param flow: List of flow data, see fv.input.flo(...)
+        :param accumulate: Use True for frame-by-frame flow data,
+                           or False for accumulated flow data
         :returns: Iterable object with all the rectangles
     """
-    return AddFlowRect(rect, flow, interpolate)
+    return AddFlowRect(rect, flow, interpolate, accumulate)
 
 
-def add_flow_points(points, flow, interpolate=True):
+def add_flow_points(points, flow, interpolate=True, accumulate=True):
     """
         Operator. Given a list of points (for one frame) and a
         list of flow data, move the points with respect to the flow
         in that pixel for each given flow frame
         :param points: Set of points, [n, 2] ndarray (x, y)
         :param flow: List of flow data, see fv.input.flo(...)
+        :param accumulate: Use True for frame-by-frame flow data,
+                           or False for accumulated flow data
         :returns: Iterable object with all the rectangles
     """
-    return AddFlowPoints(points, flow, interpolate)
+    return AddFlowPoints(points, flow, interpolate, accumulate)
 
 
 def endpoint_error(flow_est, flow_gt):
@@ -144,7 +148,7 @@ def endpoint_error(flow_est, flow_gt):
     return EndPointError(flow_est, flow_gt)
 
 
-def track_from_first(point_data, image_data, color='random', draw_lines=True, vertical=False):
+def track_from_first(point_data, image_data, color='random', draw_lines=True, vertical=False, svg=False):
     """
         Operator. Given a set of points and image data, track the set
         of points to see if they track the image's features correctly
@@ -152,7 +156,7 @@ def track_from_first(point_data, image_data, color='random', draw_lines=True, ve
         :param image_data: List of rgb data, see fv.input.rgb(...)
         :returns: List of images with features' correspondences
     """
-    return TrackFromFirst(point_data, image_data, color, draw_lines, vertical)
+    return TrackFromFirst(point_data, image_data, color, draw_lines, vertical, svg)
 
 
 def synthesize_image(image, accum_flow_data):
