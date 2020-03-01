@@ -116,6 +116,8 @@ def add_flow_rect(rect, flow, interpolate=True, accumulate=True):
         for each given flow frame.
         :param rect: Rectangle, 4 element ndarray [x0, y0, x1, y1]
         :param flow: List of flow data, see fv.input.flo(...)
+        :param interpolate: Use bilinear interpolation for flow estimation,
+                            or approximate using nearest pixel
         :param accumulate: Use True for frame-by-frame flow data,
                            or False for accumulated flow data
         :returns: Iterable object with all the rectangles
@@ -130,6 +132,8 @@ def add_flow_points(points, flow, interpolate=True, accumulate=True):
         in that pixel for each given flow frame
         :param points: Set of points, [n, 2] ndarray (x, y)
         :param flow: List of flow data, see fv.input.flo(...)
+        :param interpolate: Use bilinear interpolation for flow estimation,
+                            or approximate using nearest pixel
         :param accumulate: Use True for frame-by-frame flow data,
                            or False for accumulated flow data
         :returns: Iterable object with all the rectangles
@@ -148,15 +152,19 @@ def endpoint_error(flow_est, flow_gt):
     return EndPointError(flow_est, flow_gt)
 
 
-def track_from_first(point_data, image_data, color='random', draw_lines=True, vertical=False, svg=False):
+def track_from_first(point_data, image_data, color='random', draw_lines=True, vertical=False, figure_output=False):
     """
         Operator. Given a set of points and image data, track the set
         of points to see if they track the image's features correctly
         :param point_data: List of points data, see fv.input.points(...)
         :param image_data: List of rgb data, see fv.input.rgb(...)
+        :param color: [r, g, b] list, color of the points. Can be 'random' so each point
+                      is of a random color (consistent between frames, default mode).
+        :param vertical: False for horizontal side-by-side, True for vertical
+        :param figure_output: Output as a figure instead of RGB image
         :returns: List of images with features' correspondences
     """
-    return TrackFromFirst(point_data, image_data, color, draw_lines, vertical, svg)
+    return TrackFromFirst(point_data, image_data, color, draw_lines, vertical, figure_output)
 
 
 def synthesize_image(image, accum_flow_data):

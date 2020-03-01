@@ -11,7 +11,7 @@ class TrackFromFirst(Operator):
         to see if they track the image's features correctly
     """
 
-    def __init__(self, point_data, image_data, color, draw_lines, vertical, svg):
+    def __init__(self, point_data, image_data, color, draw_lines, vertical, figure_output):
         if not isinstance(point_data, Filterable):
             raise AssertionError(
                 'point_data should contain a list of point data')
@@ -26,7 +26,7 @@ class TrackFromFirst(Operator):
         self._color = color
         self._draw_lines = draw_lines
         self._vertical = vertical
-        self._svg = svg
+        self._figure_output = figure_output
 
     def _items(self):
         first_point = next(iter(self._point_data))
@@ -41,7 +41,7 @@ class TrackFromFirst(Operator):
                 curr_point = curr_point + np.array([width, 0])
             concat_image = np.concatenate((first_image, image), axis=axis)
             # generate image with points and lines (figure or rgb)
-            if self._svg:
+            if self._figure_output:
                 ax = plt.axes()
                 ax.imshow(concat_image)
                 if self._draw_lines:
@@ -65,7 +65,7 @@ class TrackFromFirst(Operator):
         return min(len(self._point_data), len(self._image_data))
 
     def get_type(self):
-        if self._svg:
+        if self._figure_output:
             return 'figure'
         else:
             return 'rgb'
