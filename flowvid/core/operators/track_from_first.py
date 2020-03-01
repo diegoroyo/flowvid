@@ -40,15 +40,17 @@ class TrackFromFirst(Operator):
                 axis = 1  # cols
                 curr_point = curr_point + np.array([width, 0])
             concat_image = np.concatenate((first_image, image), axis=axis)
+            # generate image with points and lines (figure or rgb)
             if self._svg:
-                plt.imshow(concat_image)
-                plt.scatter(first_point[:, 0], first_point[:, 1], marker='+', c='r')
-                plt.scatter(curr_point[:, 0], curr_point[:, 1], marker='+', c='b')
+                ax = plt.axes()
+                ax.imshow(concat_image)
                 if self._draw_lines:
                     for i, (p0, p1) in enumerate(zip(first_point, curr_point)):
-                        color = get_color(self._color, i)
-                        plt.plot([p0[0], p1[0]], [p0[1], p1[1]])
-                yield None
+                        color = get_color(self._color, i, normalize=True)
+                        ax.scatter((p0[0], p1[0]), (p0[1], p1[1]),
+                                    marker='+', color=[color])
+                        ax.plot((p0[0], p1[0]), (p0[1], p1[1]), color=color)
+                yield ax
             else:
                 draw_points(concat_image, first_point, self._color, cross=True)
                 draw_points(concat_image, curr_point, self._color, cross=True)
@@ -64,6 +66,6 @@ class TrackFromFirst(Operator):
 
     def get_type(self):
         if self._svg:
-            return 'svg'
+            return 'figure'
         else:
             return 'rgb'

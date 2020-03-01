@@ -1,5 +1,6 @@
 from .video_output import VideoOutput
 from .image_output import ImageOutput
+from .plot_show import PlotShow
 import os
 
 
@@ -22,3 +23,14 @@ def images(dir_path, name_format="{:04}.png", first_id=0):
         :returns: Image saver (see save_image or save_all)
     """
     return ImageOutput(dir_path, name_format, first_id)
+
+
+def show_plot(title='', framerate=10):
+    """
+        Show the given images in an interactive pyplot plot
+        :param title: Plot title to show
+        :param framerate: Frames per seconds shown in animated plot
+                          (must be bigger than 0)
+        :returns: Image show object (see show or show_all)
+    """
+    return PlotShow(title, framerate)

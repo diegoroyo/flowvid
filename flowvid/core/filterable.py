@@ -11,7 +11,7 @@ class Filterable:
         - _items
         - __len__
         - get_type, which should return a string from this list:
-            * flo, rgb, rect, point, float
+            * flo, rgb, rect, point, float, figure
         Optionally, it can also implement the __getitem__ function
           if the elements can be indexed
     """
@@ -35,10 +35,10 @@ class Filterable:
         raise TypeError("'{s}' object can't be indexed, use an iterator instead".format(
             s=self.__class__.__name__))
 
-    def assert_type(self, data_type):
-        if data_type != self.get_type():
-            raise AssertionError('Data type is {d1} but was expected to be {d2}'.format(
-                d1=self.get_type(), d2=data_type))
+    def assert_type(self, *args):
+        if self.get_type() not in args:
+            raise AssertionError('Data type is {d1} but was expected to be one of: {d2}'.format(
+                d1=self.get_type(), d2=' '.join(args)))
         return True
 
     def _add_filter(self, new_filter):

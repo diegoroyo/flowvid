@@ -1,16 +1,18 @@
 import numpy as np
 
 
-_random_colors = [[255, 255, 255], [0, 0, 255], [0, 255, 255], [255, 0, 0],
-                  [255, 255, 0], [200, 200, 200], [0, 0, 200], [0, 0, 150],
-                  [150, 150, 150], [150, 0, 0], [200, 0, 0], [0, 200, 200]]
+_random_colors = [(1.0, 1.0, 1.0, 1.0), (0.0, 0.0, 1.0, 1.0), (0.0, 1.0, 1.0, 1.0),
+                  (1.0, 0.0, 0.0, 1.0), (1.0, 1.0, 0.0, 1.0), (0.8, 0.8, 0.8, 1.0),
+                  (0.0, 0.0, 0.8, 1.0), (0.0, 0.0, 0.6, 1.0), (0.6, 0.6, 0.6, 1.0),
+                  (0.6, 0.0, 0.0, 1.0), (0.8, 0.0, 0.0, 1.0), (0.0, 0.8, 0.8, 1.0)]
 
 
-def get_color(color, i):
+def get_color(color, i, normalize=False):
     if color == 'random':
-        return _random_colors[i % len(_random_colors)]
-    else:
-        return color
+        color = _random_colors[i % len(_random_colors)]
+        if not normalize:
+            color = (color[0] * 255.0, color[1] * 255.0, color[2] * 255.0)
+    return color
 
 
 def draw_points(image, points, color, cross=True):
