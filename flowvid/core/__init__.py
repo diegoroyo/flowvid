@@ -84,19 +84,20 @@ def flow_to_rgb(flow):
 """
 
 
-def draw_rectangle(image, rect, color=[255, 0, 0]):
+def draw_rectangle(image, rect, color=[255, 0, 0], figure_output=False):
     """
         Operator. Given a list of images and rectangles,
         draw each rectangle in each of the images from the image list
         :param image: List of rgb data, see fv.input.rgb(...)
         :param rect: List of rect data, see fv.input.rect(...)
         :param color: [r, g, b] list, color of the rectangle (default: red)
+        :param figure_output: Output as a figure instead of RGB image
         :returns: Iterable object with all the images, with each rectangle drawn
     """
-    return DrawRectangle(image, rect, color)
+    return DrawRectangle(image, rect, color, figure_output)
 
 
-def draw_points(image, points, color='random', num_trail=1):
+def draw_points(image, points, color='random', num_trail=1, figure_output=False):
     """
         Operator. Given a list of images and sets of points,
         draw each set of points in each of the images from the image list
@@ -104,9 +105,11 @@ def draw_points(image, points, color='random', num_trail=1):
         :param points: List of points data, see fv.input.points(...)
         :param color: [r, g, b] list, color of the points. Can be 'random' so each point
                       is of a random color (consistent between frames, default mode).
+        :param num_trail: Draw a line across the N last sets of points
+        :param figure_output: Output as a figure instead of RGB image
         :returns: Iterable object with all the images, with each rectangle drawn
     """
-    return DrawPoints(image, points, color, num_trail)
+    return DrawPoints(image, points, color, num_trail, figure_output)
 
 
 def add_flow_rect(rect, flow, interpolate=True, accumulate=True):

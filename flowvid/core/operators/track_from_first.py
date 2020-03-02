@@ -18,12 +18,18 @@ class TrackFromFirst(Operator):
         if not isinstance(image_data, Filterable):
             raise AssertionError(
                 'image_data should contain a list of image data')
+        if (not isinstance(color, list) or len(color) != 3) and color != 'random':
+            raise AssertionError(
+                'color should be a [r, g, b] list where rgb range from 0 to 255, or \'random\' for random colors.')
         point_data.assert_type('point')
         image_data.assert_type('rgb')
         Operator.__init__(self)
         self._point_data = point_data
         self._image_data = image_data
-        self._color = color
+        if figure_output and color != 'random':
+            self._color = (color[0] / 255, color[1] / 255, color[2] / 255, 1.0)
+        else:
+            self._color = color
         self._draw_lines = draw_lines
         self._vertical = vertical
         self._figure_output = figure_output
