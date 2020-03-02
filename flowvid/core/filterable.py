@@ -11,7 +11,7 @@ class Filterable:
         - _items
         - __len__
         - get_type, which should return a string from this list:
-            * flo, rgb, rect, point, float, figure
+            * flo, rgb, rect, point, epe, figure
         Optionally, it can also implement the __getitem__ function
           if the elements can be indexed
     """

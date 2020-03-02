@@ -3,7 +3,7 @@ from ..filterable import Filterable
 from .base_filter import Filter
 
 
-class NormalizeFrame(Filter):
+class NormalizeFlowFrame(Filter):
     """
         Normalize flow (so module ranges from 0..1 instead of 0..n)
         with each frame's local maximum
@@ -25,7 +25,7 @@ class NormalizeFrame(Filter):
         return data
 
 
-class NormalizeVideo(Filter):
+class NormalizeFlowVideo(Filter):
     """
         Normalize flow (so module ranges from 0..1 instead of 0..n)
         with the video's maximum. Can also apply a gamma curve with
@@ -40,22 +40,21 @@ class NormalizeVideo(Filter):
             raise AssertionError(
                 'Clamp value should be in [0, 1] range instead of {c}'.format(c=clamp_pct))
         flow_data.assert_type('flo')
-        self._max = NormalizeVideo.__find_max_flow(flow_data)
+        self._flow_data = flow_data
+        self._max = self._find_max_flow()
         self._clamp = self._max * clamp_pct
         self._inv_gamma = 1.0 / gamma
         self._verbose = verbose
 
-    @staticmethod
-    def __find_max_flow(flow_data):
+    def _find_max_flow(self):
         """
             Find max flow module in flow_data
-            :param flow_data: [h, w, 2] ndarray
             :returns: Largest flow vector module in flow_data
         """
         fmax = 0.0
         if self._verbose:
             print('Applying normalization to the whole video...')
-        for flow in flow_data:
+        for flow in self._flow_data:
             fu = flow[:, :, 0]
             fv = flow[:, :, 1]
             fmax = max(fmax, np.sqrt(fu ** 2 + fv ** 2).max())

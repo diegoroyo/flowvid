@@ -32,7 +32,7 @@ class EndPointError(Operator):
         return len(self._flow_est)
 
     def get_type(self):
-        return 'float'
+        return 'epe'
 
     def _get_epe(self, flow_est, flow_gt):
         """
