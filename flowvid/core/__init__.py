@@ -198,4 +198,6 @@ def synthesize_image(image, accum_flow_data):
         :param accum_flow_data: List of accumulated flow, see fv.accumulate(...)
         :returns: List of synthesized images from the first one
     """
-    return SynthesizeImage(image, accum_flow_data)
+    # TODO remove when finished
+    raise NotImplementedError("synthesize_image hasn't been finished yet.")
+    # return SynthesizeImage(image, accum_flow_data)

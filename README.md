@@ -50,8 +50,15 @@ usage: flowvid [-h] preset
 
 Generate an optical flow visualization using the available presets.
 
+Preset can be one of:
+  color_flow: Convert flow data to RGB using the Middlebury representation
+  color_epe: Calculate endpoint error and generate a video representation
+  plot_epe: Generate a pyplot plot with the EPE distribution in all frames
+  track_points: Place points in a image and see how flow moves them
+  track_side_by_side: Place points in a image and see how flow can track them
+
 positional arguments:
-  preset      Preset, one of: (color_flow)
+  preset      Video preset, see above.
 
 optional arguments:
   -h, --help  show this help message and exit
@@ -65,9 +72,9 @@ $ python3 -m flowvid color_flow
 Flow files directory (default: flo): path/to/flo/dir 
 Vector normalize type (video, [frame], none): video
 Normalization clamp percentage (default: 1.0): 0.8
-Normalization gamma curve exponent (default: 1.0): 0.7
+Normalization gamma curve exponent (default: 1.0): 1.5
 Video framerate (default: 24): 12
-Output video name (default: output_flo.mp4): flowcolors.mp4 
+Output video name (default: output_color_flow.mp4): flowcolors.mp4 
 ```
 
 ### Python library
