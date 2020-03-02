@@ -4,16 +4,25 @@
   </a>
 
   <p align="center">
-    Toolkit to generate customized visualizations related to optical flow <i>(beta 0.1.0)</i>
+    Toolkit to generate customized visualizations related to optical flow <i>(beta 0.2.0)</i>
     <br>
     <!-- <a href="https://TODO">PyPI page</a>
     · -->
     <a href="https://github.com/diegoroyo/flowvid/blob/master/README.md#installation">Installation</a>
     ·
     <a href="https://github.com/diegoroyo/flowvid/blob/master/examples">Examples</a>
+    ·
+    <a href="https://github.com/diegoroyo/flowvid/blob/master/flowvid/presets">Presets</a>
   </p>
 </p>
 
+<table align="center">
+<tr>
+<td align="center"><img src="examples/color_flow.png" alt="color_flow result"></td>
+<td align="center"><img src="examples/color_epe.png" alt="color_epe result"></td>
+<td align="center"><img src="examples/track_points.png" alt="track_points result"></td>
+</tr>
+</table>
 
 ## Table of contents
 
@@ -77,11 +86,26 @@ Video framerate (default: 24): 12
 Output video name (default: output_color_flow.mp4): flowcolors.mp4 
 ```
 
+<center>
+<img src="examples/color_flow.png" alt="color_flow result">
+</center>
+
+Here are some examples illustrating the other presets' results:
+
+| **`color_epe`** | **`plot_epe`** |
+|---|---|
+| <img src="examples/color_epe.png" alt="color_epe result"> | <img src="examples/plot_epe.png" alt="plot_epe result"> |
+
+| **`track_points`** | **`track_side_by_side`** |
+|---|---|
+| <img src="examples/track_points.png" alt="track_points result"> | <img src="examples/track_side_by_side.png" alt="track_side_by_side result"> |
+
 ### Python library
 
 If you want to generate more complex or customized videos, you can easily use `flowvid`'s tools:
 
 * You can check the [documentation and example usages here](https://github.com/diegoroyo/flowvid/blob/master/examples).
+* You can check the [source code for the given presets here](https://github.com/diegoroyo/flowvid/blob/master/flowvid/presets).
 
 ```python
 import flowvid as fv
