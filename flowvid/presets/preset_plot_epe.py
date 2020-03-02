@@ -1,4 +1,4 @@
-from utils import ask_string, ask_multichoice
+from .utils import ask_string, ask_multichoice
 import numpy as np
 import flowvid as fv
 import matplotlib.pyplot as plt

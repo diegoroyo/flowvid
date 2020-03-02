@@ -1,4 +1,4 @@
-from utils import ask_string, ask_multichoice, ask_video_or_figure
+from .utils import ask_string, ask_multichoice, ask_video_or_figure
 import flowvid as fv
 
 

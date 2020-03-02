@@ -1,4 +1,4 @@
-from utils import ask_string, ask_for_points, ask_video_or_figure
+from .utils import ask_string, ask_for_points, ask_video_or_figure
 import flowvid as fv
 
 
