@@ -2,10 +2,12 @@ import numpy as np
 
 from .filterable import Filterable
 
-from .filters.normalize_flow import NormalizeFrame, NormalizeVideo
+from .filters.normalize_flow import NormalizeFlowFrame, NormalizeFlowVideo
+from .filters.normalize_epe import NormalizeEPEFrame, NormalizeEPEVideo
 from .filters.accum_flow import AccumFlow
 
 from .conversion.flow_to_rgb import FlowToRGB
+from .conversion.epe_to_rgb import EPEToRGB
 
 from .operators.add_flow_rect import AddFlowRect
 from .operators.add_flow_points import AddFlowPoints
@@ -21,32 +23,40 @@ from .operators.synthesize_image import SynthesizeImage
 """
 
 
-def normalize_frame(flow):
+def normalize_frame(data):
     """
-        Normalize flow data (so module ranges from 0..1 instead of 0..n)
+        Normalize flow/epe data (so module ranges from 0..1 instead of 0..n)
         with each frame's local maximum.
-        :param flow: List of flow data, see fv.input.flo(...)
-        :returns: List of flow data, normalized.
+        :param data: List of flo/epe data, see fv.input.flo(...) or fv.endpoint_error(...)
+        :returns: List of flow/epe data, normalized.
     """
-    if not isinstance(flow, Filterable):
-        raise AssertionError('flow should be a flow data list')
-    return flow._add_filter(NormalizeFrame())
+    if not isinstance(data, Filterable):
+        raise AssertionError('data should be a flow/epe data list')
+    data.assert_type('flo', 'epe')
+    if data.get_type() == 'flo':
+        return data._add_filter(NormalizeFlowFrame())
+    else:
+        return data._add_filter(NormalizeEPEFrame())
 
 
-def normalize_video(flow, clamp_pct=1.0, gamma=1.0, verbose=False):
+def normalize_video(data, clamp_pct=1.0, gamma=1.0, verbose=False):
     """
-        Normalize flow (so module ranges from 0..1 instead of 0..n)
+        Normalize flow/epe (so module ranges from 0..1 instead of 0..n)
         with the video's maximum. Can also apply a gamma curve with
         clamping to compensate if there's a high point.
-        :param flow: List of flow data, see fv.input.flo(...)
+        :param data: List of flo/epe data, see fv.input.flo(...) or fv.endpoint_error(...)
         :param clamp_pct: Modules higher than max * clamp_pct are clamped to 1
         :param gamma: Exponential curve (module01 = module01 ** gamma)
         :param verbose: Log console messages for progress
-        :returns: List of flow data, normalized.
+        :returns: List of flow/epe data, normalized.
     """
-    if not isinstance(flow, Filterable):
-        raise AssertionError('flow should be a flow data list')
-    return flow._add_filter(NormalizeVideo(flow, clamp_pct, gamma, verbose))
+    if not isinstance(data, Filterable):
+        raise AssertionError('data should be a flow/epe data list')
+    data.assert_type('flo', 'epe')
+    if data.get_type() == 'flo':
+        return data._add_filter(NormalizeFlowVideo(data, clamp_pct, gamma, verbose))
+    else:
+        return data._add_filter(NormalizeEPEVideo(data, clamp_pct, gamma, verbose))
 
 
 def accumulate(flow, interpolate=True):
@@ -77,6 +87,16 @@ def flow_to_rgb(flow):
         :returns: List of RGB data
     """
     return FlowToRGB(flow)
+
+
+def epe_to_rgb(flow, color=[255, 255, 0]):
+    """
+        Convert EPE data into RGB data, where brighter color means higher EPE
+        :param epe: List of EPE data, see fv.endpoint_error(...)
+        :param color: Brightest color to set in the image
+        :returns: List of RGB data
+    """
+    return EPEToRGB(flow, color)
 
 
 """

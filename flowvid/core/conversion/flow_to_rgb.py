@@ -7,16 +7,6 @@ from ..filterable import Filterable
 # http://www.quadibloc.com/other/colint.htm
 
 
-class FlowToRGBIterator:
-    def __init__(self, obj):
-        self._obj = obj
-        self._iter = iter(obj._flo_data)
-
-    def __next__(self):
-        flow = next(self._iter)
-        return self._obj._apply_filters(FlowToRGB._flow_to_rgb(flow))
-
-
 class FlowToRGB(Filterable):
     """
         Convert Flow data into RGB data using this color circle:
