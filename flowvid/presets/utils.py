@@ -24,13 +24,14 @@ def ask_for_points(image):
     # Ask for options
     point_type = ask_multichoice('Point generation method ({s}): ',
                                  answer_map={'random': 'random', 'interactive': 'interactive'}, default='random')
-    n_points = int(ask_string('Number of points ({s}): ', default='30'))
+    n_points = int(ask_string('Number of points ({s}): ', default='5'))
 
     # Generate points
     if point_type == 'random':
         [h, w] = image.shape[0:2]
         points = np.reshape([[random.randrange(0, w - 1), random.randrange(0, h - 1)]
                              for i in range(n_points)], (n_points, 2))
+        points = fv.input.points(points)
     elif point_type == 'interactive':
         points = fv.input.prompt_points(n_points, image)
 

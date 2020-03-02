@@ -20,8 +20,12 @@ class NormalizeFlowFrame(Filter):
         fu = data[:, :, 0]
         fv = data[:, :, 1]
         fmax = np.sqrt(fu ** 2 + fv ** 2).max()
-        data[:, :, 0] = fu / fmax
-        data[:, :, 1] = fv / fmax
+        if fmax == 0:
+            data[:, :, 0] = fu
+            data[:, :, 1] = fv
+        else:
+            data[:, :, 0] = fu / fmax
+            data[:, :, 1] = fv / fmax
         return data
 
 
@@ -41,10 +45,10 @@ class NormalizeFlowVideo(Filter):
                 'Clamp value should be in [0, 1] range instead of {c}'.format(c=clamp_pct))
         flow_data.assert_type('flo')
         self._flow_data = flow_data
-        self._max = self._find_max_flow()
-        self._clamp = self._max * clamp_pct
         self._inv_gamma = 1.0 / gamma
         self._verbose = verbose
+        self._max = self._find_max_flow()
+        self._clamp = self._max * clamp_pct
 
     def _find_max_flow(self):
         """

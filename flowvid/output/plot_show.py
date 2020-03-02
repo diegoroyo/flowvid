@@ -104,7 +104,7 @@ class PlotShow:
         title = self._plot_title
         if show_count:
             # Add space only if title is present
-            title += ' '.join([title, '({i} of {n})'.format(i=i, n=n)])
+            title = ' '.join([title, '({i} of {n})'.format(i=i, n=n)])
 
         # Create figure with title
         ax.set_title(title)
@@ -118,7 +118,7 @@ class PlotShow:
             self._next -= 1
         elif not self._paused and not self._closed:
             plt.pause(self._pause_secs)
-        
+
         # Don't delaxe on last image
         if i != n:
             self._fig.delaxes(ax)

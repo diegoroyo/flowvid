@@ -7,17 +7,15 @@ def preset_track_points():
     flo_dir = ask_string('Flow files directory ({s}): ', default='flo')
     rgb_dir = ask_string('Image directory ({s}): ', default='png')
 
-    # Ask for points
-    flo_data = fv.input.flo(flo_dir)
-    rgb_data = fv.input.rgb(rgb_dir)
-    points = ask_for_points(rgb_data[0])
-
     # Output options
     out_figure, out_options = ask_video_or_figure('output_track_points.mp4')
 
     # Add points and generate image
+    flo_data = fv.input.flo(flo_dir)
+    rgb_data = fv.input.rgb(rgb_dir)
+    points = ask_for_points(rgb_data[0])
     points = fv.add_flow_points(
-        points, flo_data, interpolate=True, accumulate=True)
+        points[0], flo_data, interpolate=True, accumulate=True)
     image_data = fv.draw_points(
         rgb_data, points, color='random', num_trail=4, figure_output=out_figure)
 

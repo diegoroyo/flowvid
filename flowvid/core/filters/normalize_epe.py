@@ -11,13 +11,16 @@ class NormalizeEPEFrame(Filter):
 
     def apply(self, data):
         """
-            :param data: [h, w, 1] (endpoint error)
-            :returns: [h, w, 1] where max(endpoint error) == 1 
+            :param data: [h, w] (endpoint error)
+            :returns: [h, w] where max(endpoint error) == 1 
         """
-        if not isinstance(data, np.ndarray) or not data.ndim == 3:
-            raise AssertionError('Data should be [h, w, 1] EPE data ndarray')
+        if not isinstance(data, np.ndarray) or not data.ndim == 2:
+            raise AssertionError('Data should be [h, w] EPE data ndarray')
 
-        return data / data.max()
+        if data.max() == 0:
+            return data
+        else:
+            return data / data.max()
 
 
 class NormalizeEPEVideo(Filter):
@@ -36,10 +39,10 @@ class NormalizeEPEVideo(Filter):
                 'Clamp value should be in [0, 1] range instead of {c}'.format(c=clamp_pct))
         epe_data.assert_type('epe')
         self._epe_data = epe_data
-        self._max = self._find_max_epe()
-        self._clamp = self._max * clamp_pct
         self._inv_gamma = 1.0 / gamma
         self._verbose = verbose
+        self._max = self._find_max_epe()
+        self._clamp = self._max * clamp_pct
 
     def _find_max_epe(self):
         """
@@ -56,11 +59,11 @@ class NormalizeEPEVideo(Filter):
 
     def apply(self, data):
         """
-            :param data: [h, w, 1] (endpoint error)
-            :returns: [h, w, 1] where max(endpoint error) == 1 
+            :param data: [h, w] (endpoint error)
+            :returns: [h, w] where max(endpoint error) == 1 
         """
-        if not isinstance(data, np.ndarray) or not data.ndim == 3:
-            raise AssertionError('Data should be [h, w, 1] EPE data ndarray')
+        if not isinstance(data, np.ndarray) or not data.ndim == 2:
+            raise AssertionError('Data should be [h, w] EPE data ndarray')
 
         idm = data > self._clamp
         data[idm] = 1
