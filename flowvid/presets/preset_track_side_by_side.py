@@ -17,8 +17,10 @@ def preset_track_side_by_side():
     points = ask_for_points(rgb_data[0])
     points = fv.add_flow_points(
         points[0], flo_data, interpolate=True, accumulate=True)
+    [h, w] = rgb_data[0].shape[0:2]
+    vertical = w > h
     image_data = fv.track_from_first(
-        points, rgb_data, color='random', figure_output=out_figure)
+        points, rgb_data, color='random', vertical=vertical, figure_output=out_figure)
 
     # Generate output
     if out_figure:
