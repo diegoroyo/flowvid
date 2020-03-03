@@ -39,7 +39,6 @@
 pip3 install flowvid
 ```
 Or you can install it directly from Github:
-
 ```
 pip3 install git+https://github.com/diegoroyo/flowvid/
 ```
@@ -48,6 +47,13 @@ or you can clone the repo:
 git clone https://github.com/diegoroyo/flowvid.git
 cd flowvid
 scripts/local_install.sh
+```
+
+You might need to install the following dependencies:
+```bash
+pip3 install imageio imageio-ffmpeg numpy matplotlib Pillow
+# or if you use the provided requirements.txt
+pip3 install -r requirements.txt
 ```
 
 ## Quick start
