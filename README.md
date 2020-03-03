@@ -85,10 +85,9 @@ Normalization gamma curve exponent (default: 1.0): 1.5
 Video framerate (default: 24): 12
 Output video name (default: output_color_flow.mp4): flowcolors.mp4 
 ```
-
-<center>
+<p align="center">
 <img src="examples/color_flow.png" alt="color_flow result">
-</center>
+</p>
 
 Here are some examples illustrating the other presets' results:
 
