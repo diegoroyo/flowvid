@@ -4,10 +4,10 @@
   </a>
 
   <p align="center">
-    Toolkit to generate customized visualizations related to optical flow <i>(beta 0.2.0)</i>
+    Toolkit to generate customized visualizations related to optical flow <i>(beta 0.2.1)</i>
     <br>
-    <!-- <a href="https://TODO">PyPI page</a>
-    · -->
+    <a href="https://pypi.org/project/flowvid/">PyPI page</a>
+    ·
     <a href="https://github.com/diegoroyo/flowvid/blob/master/README.md#installation">Installation</a>
     ·
     <a href="https://github.com/diegoroyo/flowvid/blob/master/examples">Examples</a>
@@ -34,7 +34,11 @@
 
 ## Installation
 
-For now installation is only available from Github:
+`flowvid` is available as a PyPI package:
+```
+pip3 install flowvid
+```
+Or you can install it directly from Github:
 
 ```
 pip3 install git+https://github.com/diegoroyo/flowvid/
