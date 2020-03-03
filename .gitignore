@@ -7,4 +7,4 @@ test
 *.egg-info
 *.png
 *.mp4
-*.txt
+scripts/*.txt
