@@ -39,7 +39,7 @@ def preset_color_epe():
     if out_figure:
         (framerate) = out_options
         out = fv.output.show_plot(
-            title='epe_video result', framerate=framerate)
+            title='color_epe result', framerate=framerate)
         out.show_all(image_data, show_count=True)
     else:
         (framerate, out_name) = out_options
