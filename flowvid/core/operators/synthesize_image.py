@@ -20,7 +20,7 @@ class SynthesizeImage(Operator):
                 'image_data should contain a list of image data')
         accum_flow_data.assert_type('flo')
         Operator.__init__(self)
-        self._image = image
+        self._image = np.copy(image)
         self._flow_data = accum_flow_data
 
     def _items(self):

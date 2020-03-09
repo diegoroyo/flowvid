@@ -22,7 +22,7 @@ class AddFlowRect(Operator):
                 'flow_data should contain a list of flow data')
         flow_data.assert_type('flo')
         Operator.__init__(self)
-        self._rect = rect.astype(float)
+        self._rect = rect.copy().astype(float)
         self._flow_data = flow_data
         self._interpolate = interpolate
         self._accumulate = accumulate
