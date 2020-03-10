@@ -6,6 +6,7 @@ import flowvid as fv
 
 from .presets.preset_color_flow import preset_color_flow
 from .presets.preset_color_epe import preset_color_epe
+from .presets.preset_flow_arrows import preset_flow_arrows
 from .presets.preset_plot_epe import preset_plot_epe
 from .presets.preset_track_points import preset_track_points
 from .presets.preset_track_side_by_side import preset_track_side_by_side
@@ -17,6 +18,7 @@ description = textwrap.dedent(
     Preset can be one of:
     * color_flow: Convert flow data to RGB using the Middlebury representation
     * color_epe: Calculate endpoint error and generate a video representation
+    * flow_arrows: Draw arrows representing optical flow over a video
     * plot_epe: Generate a pyplot plot with the EPE distribution in all frames
     * track_points: Place points in a image and see how flow moves them
     * track_side_by_side: Place points in a image and see how flow can track them
@@ -34,6 +36,7 @@ args = parser.parse_args()
 video_type = args.preset[0]
 presets = {'color_flow': preset_color_flow,
            'color_epe': preset_color_epe,
+           'flow_arrows': preset_flow_arrows,
            'plot_epe': preset_plot_epe,
            'track_points': preset_track_points,
            'track_side_by_side': preset_track_side_by_side}
