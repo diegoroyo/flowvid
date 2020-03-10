@@ -13,6 +13,7 @@ from .operators.add_flow_rect import AddFlowRect
 from .operators.add_flow_points import AddFlowPoints
 from .operators.draw_rectangle import DrawRectangle
 from .operators.draw_points import DrawPoints
+from .operators.draw_flow_arrows import DrawFlowArrows
 from .operators.endpoint_error import EndPointError
 from .operators.track_from_first import TrackFromFirst
 from .operators.synthesize_image import SynthesizeImage
@@ -130,6 +131,25 @@ def draw_points(image, points, color='random', num_trail=1, figure_output=False)
         :returns: Iterable object with all the images, with each rectangle drawn
     """
     return DrawPoints(image, points, color, num_trail, figure_output)
+
+
+def draw_flow_arrows(image_data, flow_data, color='flow', flat_colors=False, subsample_ratio=5, ignore_ratio_warning=False):
+    """
+        Operator. Given a list of images and flow data, draw a visual representation
+        of the flow using arrows on top of the image
+        :param image_data: List of rgb data, see fv.input.rgb(...)
+        :param flow_data: List of flow data, see fv.input.flo(...)
+        :param color: [r, g, b] list, color of the arrows. Can be 'flow' so each arrow
+                      is colored according to its direction using this color circle:
+                      http://www.quadibloc.com/other/colint.htm
+        :param flat_colors: If True, larger arrows are painted in lighter colors,
+                            and smaller flow is darker.
+        :param subsample_ratio: For a ratio of N, calculate mean flow in patches of NxN
+                                for each arrow drawn.
+        :param ignore_ratio_warning: Don't stretch the ratio if it doesn't fit exactly in the image
+        :returns: List of images with arrows drawn
+    """
+    return DrawFlowArrows(image_data, flow_data, color, flat_colors, subsample_ratio, ignore_ratio_warning)
 
 
 def add_flow_rect(rect, flow, interpolate=True, accumulate=True):
