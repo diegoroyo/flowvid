@@ -66,7 +66,7 @@ class NormalizeEPEVideo(Filter):
             raise AssertionError('Data should be [h, w] EPE data ndarray')
 
         idm = data > self._clamp
-        norm_data = np.empty(data.shape())
+        norm_data = np.empty(data.shape)
         norm_data[idm] = 1
         norm_data[~idm] = (data[~idm] / self._clamp) ** self._inv_gamma
 

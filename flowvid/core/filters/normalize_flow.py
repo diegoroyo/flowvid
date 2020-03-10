@@ -20,7 +20,7 @@ class NormalizeFlowFrame(Filter):
         fu = data[:, :, 0]
         fv = data[:, :, 1]
         fmax = np.sqrt(fu ** 2 + fv ** 2).max()
-        norm_data = np.empty(data.shape())
+        norm_data = np.empty(data.shape)
         if fmax == 0:
             norm_data[:, :, 0] = fu
             norm_data[:, :, 1] = fv
@@ -87,7 +87,7 @@ class NormalizeFlowVideo(Filter):
         fv[~idv] = fv[~idv] / self._clamp
         fv[~idv] = np.sign(fv[~idv]) * (np.abs(fv[~idv]) ** self._inv_gamma)
 
-        norm_data = np.empty(data.shape())
+        norm_data = np.empty(data.shape)
         norm_data[:, :, 0] = fu
         norm_data[:, :, 1] = fv
         return norm_data
