@@ -51,7 +51,7 @@ class Filterable:
         if not isinstance(new_filter, Filter):
             raise AssertionError(
                 'new_filter should be a filter and inherit from it')
-        other = copy.copy(self)  # shallow copy, links items
+        other = copy.deepcopy(self)
         other._filters.append(new_filter)
         return other
 
