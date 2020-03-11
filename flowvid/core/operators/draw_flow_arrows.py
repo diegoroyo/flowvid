@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
+import itertools
 import math
 from ..filterable import Filterable
 from ..util.convert_to_axes import convert_to_axes
@@ -13,7 +14,9 @@ class DrawFlowArrows(Operator):
         of the flow using arrows on top of the image
     """
 
-    def __init__(self, image_data, flow_data, color, flat_colors, subsample_ratio, ignore_ratio_warning):
+    def __init__(self, image_data, flow_data, background_attenuation,
+                 color, flat_colors, arrow_min_alpha,
+                 subsample_ratio, ignore_ratio_warning):
         if not isinstance(image_data, Filterable):
             raise AssertionError(
                 'image_data should contain a list of rgb data')
@@ -26,14 +29,25 @@ class DrawFlowArrows(Operator):
         image_data.assert_type('rgb', 'figure')
         flow_data.assert_type('flo')
 
+        if background_attenuation < 0 or background_attenuation > 1:
+            raise AssertionError(
+                'background_attenuation should be in 0-1 range but it is {n}.'.format(n=background_attenuation))
+        if background_attenuation != 0 and image_data.get_type() != 'rgb':
+            raise AssertionError(
+                'Can\'t apply background attenuation to non-rgb image data (it is \'{d}\').'.format(d=image_data.get_type()))
         if subsample_ratio < 1:
             raise AssertionError(
                 'subsample_ratio should be a positive integer but it is {n}.'.format(n=subsample_ratio))
+        if arrow_min_alpha < 0 or arrow_min_alpha > 1:
+            raise AssertionError(
+                'arrow_min_alpha should be in 0-1 range but it is {n}.'.format(n=arrow_min_alpha))
         Operator.__init__(self)
         self._image_data = image_data
         self._flow_data = flow_data
+        self._attenuation = 1.0 - background_attenuation
         self._color = color
         self._flat_colors = flat_colors
+        self._arrow_min_alpha = arrow_min_alpha
 
         [h, w] = flow_data[0].shape[0:2]
         self._subsample_x = subsample_ratio
@@ -110,12 +124,14 @@ class DrawFlowArrows(Operator):
         return total_sum / total_area
 
     def _draw(self, image, flow, color):
+        if self._attenuation < 1:
+            image = (image * self._attenuation).astype(np.uint8)
         ax = convert_to_axes(image)
 
         [h, w] = flow.shape[0:2]
         ix = int(w // self._subsample_x)
         iy = int(h // self._subsample_y)
-        arrows = np.zeros((iy, ix, 2))
+        arrows = np.empty((iy, ix, 2))
 
         for y in range(iy):
             for x in range(ix):
@@ -132,34 +148,36 @@ class DrawFlowArrows(Operator):
             fu = arrows[:, :, 0]
             fv = arrows[:, :, 1]
             arrows_norm = np.copy(arrows) / np.sqrt(fu ** 2 + fv ** 2).max()
-            flow_colors = flow_to_rgb(arrows_norm)
+            colors = flow_to_rgb(arrows_norm)
+            alpha = np.ones((iy, ix, 1)) * 255.0
+            # concatenate alpha component
+            colors = np.concatenate((colors, alpha), axis=2)
+            # convert to 0-1 range
+            colors /= 255.0
+            colors = np.reshape(colors, (iy * ix, 4))
+        else:
+            colors = self._color
+            # convert to 0-1 range and add alpha
+            colors = (colors[0] / 255.0, colors[1] / 255.0,
+                      colors[2] / 255.0, 1.0)
+            colors = np.reshape(np.repeat(colors, iy * ix),
+                                (iy * ix, 4), order='F')
+
+        origins = np.reshape([((x + 0.5) * self._subsample_x, (y + 0.5) * self._subsample_y)
+                              for y, x in itertools.product(range(iy), range(ix))], (iy * ix, 2))
+        arrows = np.reshape(arrows, (iy * ix, 2))
 
         if not self._flat_colors:
-            fu = arrows[:, :, 0]
-            fv = arrows[:, :, 1]
-            max_module = (fu ** 2 + fv ** 2).max()
+            fu = arrows[:, 0]
+            fv = arrows[:, 1]
+            modules = np.reshape(fu ** 2 + fv ** 2, (iy * ix, 1))
+            alpha_base = self._arrow_min_alpha
+            alpha_mod = 1.0 - alpha_base
+            modules = np.sqrt((modules / modules.max())) * \
+                alpha_mod + alpha_base
+            colors = np.multiply(colors, modules)
 
-        # TODO vectorize/improve arrow draw method
-        for y in range(iy):
-            for x in range(ix):
-                # arrow origin
-                ox = (x + 0.5) * self._subsample_x
-                oy = (y + 0.5) * self._subsample_y
-                # arrow length
-                [dx, dy] = arrows[y, x]
-                # arrow color
-                if self._color == 'flow':
-                    color = flow_colors[y, x, :]
-                else:
-                    color = self._color
-                # arrow color attenuation
-                if not self._flat_colors:
-                    color = color * math.sqrt((dx ** 2 + dy ** 2) / max_module)
-                # convert to RGBA (for color argument)
-                color = (color[0] / 255.0, color[1] /
-                         255.0, color[2] / 255.0, 1.0)
-                # draw arrow
-                ax.arrow(ox, oy, dx, dy, color=color,
-                         width=self._arrow_width, length_includes_head=True)
+        ax.quiver(origins[:, 0], origins[:, 1], arrows[:, 0],
+                  arrows[:, 1], scale_units='width', scale=w, angles='xy', color=colors, minlength=-1)
 
         return ax

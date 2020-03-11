@@ -18,22 +18,29 @@ def preset_flow_arrows():
 
     # Arrow subsampling
     subsample_ratio = int(ask_string(
-        'Flow subsample ratio ({s}): ', default='5'))
+        'Flow subsample ratio ({s}): ', default='16'))
 
     # Output options
-    framerate = int(ask_string('Video framerate ({s}): ', default='24'))
+    framerate = int(ask_string('Video framerate ({s}): ', default='10'))
 
     # Add points and generate image
     flo_data = fv.input.flo(flo_dir)
     if use_flow:
         flo_data_norm = fv.normalize_frame(flo_data)
         rgb_data = fv.flow_to_rgb(flo_data_norm)
+        background_attenuation = 0.0
         flat_colors = True
+        arrow_color = [0, 0, 0]
     else:
         rgb_data = fv.input.rgb(rgb_dir)
+        background_attenuation = 0.6
         flat_colors = False
-    arrow_data = fv.draw_flow_arrows(rgb_data, flo_data, color=arrow_color,
-                                     flat_colors=flat_colors, subsample_ratio=subsample_ratio, ignore_ratio_warning=False)
+        arrow_color = 'flow'
+
+    arrow_data = fv.draw_flow_arrows(
+        rgb_data, flo_data, background_attenuation=background_attenuation,
+        color=arrow_color, flat_colors=flat_colors, arrow_min_alpha=0.7,
+        subsample_ratio=subsample_ratio, ignore_ratio_warning=False)
 
     # Generate output
     out = fv.output.show_plot(

@@ -133,23 +133,32 @@ def draw_points(image, points, color='random', num_trail=1, figure_output=False)
     return DrawPoints(image, points, color, num_trail, figure_output)
 
 
-def draw_flow_arrows(image_data, flow_data, color='flow', flat_colors=False, subsample_ratio=5, ignore_ratio_warning=False):
+def draw_flow_arrows(image_data, flow_data, background_attenuation=0,
+                     color='flow', flat_colors=False, arrow_min_alpha=1,
+                     subsample_ratio=5, ignore_ratio_warning=False):
     """
         Operator. Given a list of images and flow data, draw a visual representation
         of the flow using arrows on top of the image
         :param image_data: List of rgb data, see fv.input.rgb(...)
         :param flow_data: List of flow data, see fv.input.flo(...)
+        :param background_attenuation: Fade the background image to black,
+                                       0 means normal background, 1 means all black
         :param color: [r, g, b] list, color of the arrows. Can be 'flow' so each arrow
                       is colored according to its direction using this color circle:
                       http://www.quadibloc.com/other/colint.htm
         :param flat_colors: If True, larger arrows are painted in lighter colors,
                             and smaller flow is darker.
+        :param arrow_min_alpha: If flat_colors=False, arrows can be transparent
+                                if the flow is lower in that zone. This sets the minimum
+                                value for the alpha channel (with zero flow), with 0-1 range.
         :param subsample_ratio: For a ratio of N, calculate mean flow in patches of NxN
                                 for each arrow drawn.
         :param ignore_ratio_warning: Don't stretch the ratio if it doesn't fit exactly in the image
         :returns: List of images with arrows drawn
     """
-    return DrawFlowArrows(image_data, flow_data, color, flat_colors, subsample_ratio, ignore_ratio_warning)
+    return DrawFlowArrows(image_data, flow_data, background_attenuation,
+                          color, flat_colors, arrow_min_alpha,
+                          subsample_ratio, ignore_ratio_warning)
 
 
 def add_flow_rect(rect, flow, interpolate=True, accumulate=True):
