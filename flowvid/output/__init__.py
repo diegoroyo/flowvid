@@ -1,5 +1,6 @@
 from .video_output import VideoOutput
 from .image_output import ImageOutput
+from .flo_output import FloOutput
 from .plot_show import PlotShow
 import os
 
@@ -23,6 +24,18 @@ def images(dir_path, name_format="{:04}.png", first_id=0):
         :returns: Image saver (see save_image or save_all)
     """
     return ImageOutput(dir_path, name_format, first_id)
+
+
+def flo(dir_path, name_format="{:04}.flo", first_id=0):
+    """
+        Flow file sequence output generator. Using Middlebury format:
+        http://vision.middlebury.edu/flow/code/flow-code/README.txt
+        :param dir_path: Directory to save the flow files
+        :param name_format: Filename format
+        :param first_id: First ID to apply to name_format
+        :returns: Flow file saver (see save_file or save_all)
+    """
+    return FloOutput(dir_path, name_format, first_id)
 
 
 def show_plot(title='', framerate=10):
