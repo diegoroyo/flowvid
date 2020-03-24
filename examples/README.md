@@ -3,6 +3,7 @@
 * [Input](#input)
 * [Data manipulation](#data-manipulation)
   * [Flow normalization and conversion to RGB](#flow-normalization-and-conversion-to-rgb)
+  * [Display optical flow using a quiver plot](#display-optical-flow-using-a-quiver-plot)
   * [Endpoint error normalization and conversion to RGB](#endpoint-error-normalization-and-conversion-to-rgb)
   * [Track a given set of points using optical flow](#track-a-given-set-of-points-using-optical-flow)
 * [Output](#output)
@@ -84,6 +85,28 @@ flo_video = fv.normalize_video(flo_data, clamp_pct=0.8, gamma=1.5)
 rgb_frames = fv.flow_to_rgb(flo_video)
 ```
 
+### Display optical flow using a quiver plot
+
+```python
+import flowvid as fv
+
+# Optical flow data to display
+flo_data = fv.input.flo('path/to/flo')
+
+# Normalize (0-1 range) and convert to RGB
+flo_norm = fv.normalize_frame(flo_data)
+rgb_data = fv.flow_to_rgb(flo_norm)
+
+# Display quiver plot
+# Make the background a bit dark (background_attenuation)
+# Use black arrows with flat color
+quiver_data = fv.draw_flow_arrows(rgb_data, flo_data, background_attenuation=0.2, color=[0, 0, 0], flat_colors=True)
+
+# Show the quiver plot in an interactive video
+out = fv.output.show_plot(title='Quiver plot result', framerate=5)
+out.show_all(quiver_data, show_count=True)
+```
+
 ### Endpoint error normalization and conversion to RGB
 
 ```python
@@ -134,6 +157,7 @@ You can save your work as a video or as an image sequence, or show it in an inte
 
 * `fv.output.video(path, framerate)`: Save as a video with given framerate
 * `fv.output.image(path, name_format, first_id)`: Save as image sequence (see example)
+* `fv.output.flo(path, name_format, first_id)`: Save as .flo files (e.g. normalized/treated optical flow). Uses Middlebury format.
 * `fv.output.show_plot(title)`: Show interactive pyplot with video results sequence
 
 ```python
@@ -155,7 +179,12 @@ for frame in rgb_frames:
 out3 = fv.output.image('path/to/dir', name_format='{:04}.png', first_id=1000)
 out3.add_all(rgb_frames) # save 1000.png, 1001.png to (1000+n).png
 
-# Option 4: Show interactive pyplot with images
-out4 = fv.output.show_plot(title='Flow colors', framerate=10)
-out4.show_all(rgb_frames, show_count=True)
+# Option 4: Save as .flo file
+out4 = fv.output.flo('path/to/dir', name_format='{:02}.flo', first_id=10)
+flo_norm = fv.normalize_video(flo_data)
+out4.add_all(flo_norm) # save 10.flo, 11.flo to (10+n).flo
+
+# Option 5: Show interactive pyplot with images
+out5 = fv.output.show_plot(title='Flow colors', framerate=10)
+out5.show_all(rgb_frames, show_count=True)
 ```

@@ -20,7 +20,7 @@
 <tr>
 <td align="center"><img src="https://raw.githubusercontent.com/diegoroyo/flowvid/master/examples/color_flow.png" alt="color_flow result"></td>
 <td align="center"><img src="https://raw.githubusercontent.com/diegoroyo/flowvid/master/examples/color_epe.png" alt="color_epe result"></td>
-<td align="center"><img src="https://raw.githubusercontent.com/diegoroyo/flowvid/master/examples/track_points.png" alt="track_points result"></td>
+<td align="center"><img src="https://raw.githubusercontent.com/diegoroyo/flowvid/master/examples/flow_arrows_1.png" alt="flow_arrows result"></td>
 </tr>
 </table>
 
@@ -108,6 +108,10 @@ Here are some examples illustrating the other presets' results:
 | **`track_points`** | **`track_side_by_side`** |
 |---|---|
 | <img src="https://raw.githubusercontent.com/diegoroyo/flowvid/master/examples/track_points.png" alt="track_points result"> | <img src="https://raw.githubusercontent.com/diegoroyo/flowvid/master/examples/track_side_by_side.png" alt="track_side_by_side result"> |
+
+| **`flow_arrows`** (1) | **`flow_arrows`** (2) |
+|---|---|
+| <img src="https://raw.githubusercontent.com/diegoroyo/flowvid/master/examples/flow_arrows_1.png" alt="flow_arrows result"> | <img src="https://raw.githubusercontent.com/diegoroyo/flowvid/master/examples/flow_arrows_2.png" alt="flow_arrows result"> |
 
 ### Python library
 
