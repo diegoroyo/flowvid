@@ -19,7 +19,8 @@ class NormalizeFlowFrame(Filter):
 
         fu = data[:, :, 0]
         fv = data[:, :, 1]
-        fmax = np.sqrt(fu ** 2 + fv ** 2).max()
+        # add small epsilon for float accuracy
+        fmax = np.sqrt(fu ** 2 + fv ** 2).max() + 1e-3
         norm_data = np.empty(data.shape)
         if fmax == 0:
             norm_data[:, :, 0] = fu
@@ -64,7 +65,8 @@ class NormalizeFlowVideo(Filter):
             fv = flow[:, :, 1]
             fmax = max(fmax, np.sqrt(fu ** 2 + fv ** 2).max())
 
-        return fmax
+        # add small epsilon for float accurady
+        return fmax + 1e-3
 
     def apply(self, data):
         """

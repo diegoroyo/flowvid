@@ -91,7 +91,7 @@ class DrawFlowArrows(Operator):
         # left edge
         if rem_px < 1:
             total_area += (qyf - pyc) * rem_px
-            total_sum += np.sum(flow[pyc:qyf, pxc-1, :], axis=(0, 1)) * rem_px
+            total_sum += np.sum(flow[pyc:qyf, pxc-1, :], axis=0) * rem_px
             # top-left edge
             if rem_py < 1:
                 total_area += rem_py * rem_px
@@ -99,7 +99,7 @@ class DrawFlowArrows(Operator):
         # top edge
         if rem_py < 1:
             total_area += (qxf - pxc) * rem_py
-            total_sum += np.sum(flow[pyc-1, pxc:qxf, :], axis=(0, 1)) * rem_py
+            total_sum += np.sum(flow[pyc-1, pxc:qxf, :], axis=0) * rem_py
             # top-right edge
             if rem_qx > 0:
                 total_area += rem_qx * rem_py
@@ -107,7 +107,7 @@ class DrawFlowArrows(Operator):
         # right-edge
         if rem_qx > 0:
             total_area += (qyf - pyc) * rem_qx
-            total_sum += np.sum(flow[pyc:qyf, qxf+1, :], axis=(0, 1)) * rem_qx
+            total_sum += np.sum(flow[pyc:qyf, qxf+1, :], axis=0) * rem_qx
             # bottom-right edge
             if rem_qy > 0:
                 total_area += rem_qy * rem_qx
@@ -115,7 +115,7 @@ class DrawFlowArrows(Operator):
         # bottom edge
         if rem_qy > 0:
             total_area += (qxf - pxc) * rem_qy
-            total_sum += np.sum(flow[qyf+1, pxc:qxf, :], axis=(0, 1)) * rem_qy
+            total_sum += np.sum(flow[qyf+1, pxc:qxf, :], axis=0) * rem_qy
             # bottom-left edge
             if rem_px < 1:
                 total_area += rem_px * rem_qy
@@ -136,10 +136,10 @@ class DrawFlowArrows(Operator):
         for y in range(iy):
             for x in range(ix):
                 # flow zone
-                px = x * self._subsample_x
-                py = y * self._subsample_y
-                qx = px + self._subsample_x
-                qy = py + self._subsample_y
+                px = max(x * self._subsample_x, 0)
+                py = max(y * self._subsample_y, 0)
+                qx = min(px + self._subsample_x, w - 1)
+                qy = min(py + self._subsample_y, h - 1)
                 # get mean flow in zone
                 arrows[y, x, :] = DrawFlowArrows._mean_flow(
                     flow, px, py, qx, qy)
@@ -163,7 +163,8 @@ class DrawFlowArrows(Operator):
             colors = np.reshape(np.repeat(colors, iy * ix),
                                 (iy * ix, 4), order='F')
 
-        origins = np.reshape([((x + 0.5) * self._subsample_x, (y + 0.5) * self._subsample_y)
+        origins = np.reshape([((x + 0.5) * self._subsample_x - 0.5,
+                               (y + 0.5) * self._subsample_y - 0.5)
                               for y, x in itertools.product(range(iy), range(ix))], (iy * ix, 2))
         arrows = np.reshape(arrows, (iy * ix, 2))
 

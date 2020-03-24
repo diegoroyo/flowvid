@@ -33,7 +33,7 @@ def preset_flow_arrows():
         arrow_color = [0, 0, 0]
     else:
         rgb_data = fv.input.rgb(rgb_dir)
-        background_attenuation = 0.6
+        background_attenuation = 0.4
         flat_colors = False
         arrow_color = 'flow'
 
