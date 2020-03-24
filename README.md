@@ -4,7 +4,7 @@
   </a>
 
   <p align="center">
-    Toolkit to generate customized visualizations related to optical flow <i>(beta 0.2.1)</i>
+    Toolkit to generate customized visualizations related to optical flow <i>(beta 0.3.0)</i>
     <br>
     <a href="https://pypi.org/project/flowvid/">PyPI page</a>
     ·
