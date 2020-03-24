@@ -64,6 +64,7 @@ pip3 install -r requirements.txt
 
 Flowvid is a python library for video generation, but it also contains several video presets with an user-friendly assistant:
 
+* Usage: `python3 -m flowvid `_`preset`_
 * Presets can be listed using `python3 -m flowvid -h`
 
 ```
@@ -76,6 +77,7 @@ Generate an optical flow visualization using the available presets.
 Preset can be one of:
   color_flow: Convert flow data to RGB using the Middlebury representation
   color_epe: Calculate endpoint error and generate a video representation
+  flow_arrows: Draw arrows representing optical flow over a video
   plot_epe: Generate a pyplot plot with the EPE distribution in all frames
   track_points: Place points in a image and see how flow moves them
   track_side_by_side: Place points in a image and see how flow can track them
