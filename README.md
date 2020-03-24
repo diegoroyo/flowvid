@@ -4,7 +4,11 @@
   </a>
 
   <p align="center">
-    Toolkit to generate customized visualizations related to optical flow <i>(beta 0.3.0)</i>
+    <a href="https://badge.fury.io/py/flowvid"><img src="https://badge.fury.io/py/flowvid.svg" alt="PyPI version" height="18"></a>
+    <a href="https://pepy.tech/project/flowvid/month"><img src="https://pepy.tech/badge/flowvid/month" alt="PyPI monthly downloads" height="18"></a>
+    <a href="https://github.com/diegoroyo/flowvid/issues"><img alt="GitHub issues" src="https://img.shields.io/github/issues/diegoroyo/flowvid" height="18"></a>
+    <br>
+    Toolkit to generate customized visualizations related to optical flow
     <br>
     <a href="https://pypi.org/project/flowvid/">PyPI page</a>
     ·
