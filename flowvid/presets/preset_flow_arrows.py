@@ -1,4 +1,4 @@
-from .utils import ask_string, ask_multichoice
+from .utils import ask_string, ask_multichoice, ask_video_or_figure
 import numpy as np
 import flowvid as fv
 
@@ -21,7 +21,7 @@ def preset_flow_arrows():
         'Flow subsample ratio ({s}): ', default='16'))
 
     # Output options
-    framerate = int(ask_string('Video framerate ({s}): ', default='10'))
+    out_figure, out_options = ask_video_or_figure('output_flow_arrows.mp4')
 
     # Add points and generate image
     flo_data = fv.input.flo(flo_dir)
@@ -43,6 +43,12 @@ def preset_flow_arrows():
         subsample_ratio=subsample_ratio, ignore_ratio_warning=False)
 
     # Generate output
-    out = fv.output.show_plot(
-        title='flow_arrows result', framerate=framerate)
-    out.show_all(arrow_data, show_count=True)
+    if out_figure:
+        (framerate) = out_options
+        out = fv.output.show_plot(
+            title='color_flow result', framerate=framerate)
+        out.show_all(arrow_data, show_count=True)
+    else:
+        (framerate, out_name) = out_options
+        out = fv.output.video(out_name, framerate=framerate)
+        out.add_all(arrow_data, verbose=True)
