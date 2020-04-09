@@ -29,7 +29,7 @@ class EPEToRGB(Filterable):
     def _epe_to_rgb(self, epe):
         """
             :param data: [h, w] ndarray (epe data, normalized)
-            :returns: [h, w, 3] ndarray (rgb data) using color wheel
+            :returns: [h, w, 3] ndarray (rgb data)
         """
         if not isinstance(epe, np.ndarray) or not epe.ndim == 2:
             raise AssertionError('Data should be [h, w] epe data ndarray')

@@ -8,6 +8,7 @@ from .filters.accum_flow import AccumFlow
 
 from .conversion.flow_to_rgb import FlowToRGB
 from .conversion.epe_to_rgb import EPEToRGB
+from .conversion.split_uv import SplitUV
 
 from .operators.add_flow_rect import AddFlowRect
 from .operators.add_flow_points import AddFlowPoints
@@ -90,14 +91,28 @@ def flow_to_rgb(flow):
     return FlowToRGB(flow)
 
 
-def epe_to_rgb(flow, color=[255, 255, 0]):
+def epe_to_rgb(epe, color=[255, 255, 0]):
     """
         Convert EPE data into RGB data, where brighter color means higher EPE
         :param epe: List of EPE data, see fv.endpoint_error(...)
         :param color: Brightest color to set in the image
         :returns: List of RGB data
     """
-    return EPEToRGB(flow, color)
+    return EPEToRGB(epe, color)
+
+
+def split_uv(flow, channel='u', data_type='ndarray', ignore_rgb_warning=False):
+    """
+        Split flow data into u, v channels (horizontal/vertical movement)
+        :param flow: List of flow data, see fv.input.flo(...)
+        :param channel: U for horizontal flow, V for vertical
+        :param data_type: ndarray (raw), flo or rgb data.
+                          Important note: If you use rgb, you must also normalize
+                          the flow data (see fv.normalize_frame(...) or fv.normalize_video(...))
+        :param ignore_rgb_warning: Ignore the important note about using rgb data_type
+        :returns: List of modified data, according to channel and data_type
+    """
+    return SplitUV(flow, channel, data_type, ignore_rgb_warning)
 
 
 """
