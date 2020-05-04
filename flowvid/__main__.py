@@ -33,23 +33,19 @@ parser = argparse.ArgumentParser(prog='flowvid',
 # Preset / configuration
 group_config = parser.add_argument_group('configuration')
 group_config.add_argument('preset', type=str, metavar='<preset>',
-                          help='Video preset, see above.')
+                          help='Video preset, see above')
 group_config.add_argument('-c', '--config', type=str, required=False, metavar='</path/to/config/file.yaml>',
                           help='Preset configuration file in YAML format')
 
 # Input
 group_input = parser.add_argument_group('input')
 group_input.add_argument('--flo-dir', type=str, required=False, metavar='</path/to/flo/dir>',
-                         help='Directory to look for .flo files. See flo-pattern')
+                         help='Directory to look for .flo files')
 group_input.add_argument('--flo-gt-dir', type=str, required=False, metavar='</path/to/flo-gt/dir>',
-                         help='Directory to look for .flo GROUND TRUTH files. See flo-pattern')
-# group_input.add_argument('--flo-pattern', type=str, required=False, default='{:04d}', # TODO metavar
-#                     help='Filename format in flo directory. Default looks for \'####.flo\' (4 digits)')
+                         help='Directory to look for .flo GROUND TRUTH files')
 
 group_input.add_argument('--image-dir', type=str, required=False, metavar='</path/to/image/dir>',
-                         help='Directory to look for image files. See image-pattern')
-# group_input.add_argument('--image-pattern', type=str, required=False, default='{:04d}', # TODO metavar
-#                     help='Filename format in image directory. Default looks for \'####.{png|jpg|jpeg}\' (4 digits)')
+                         help='Directory to look for image files')
 
 # Core / main processing
 group_core = parser.add_argument_group('processing')

@@ -33,7 +33,7 @@ def rgb(path, dir_first=0, dir_total=None):
                             (if None, return all elements from the directory)
         :returns: Iterable and indexable list of RGB data
     """
-    return RGBData(path, extensions=('.png', '.bmp', '.jpg'), dir_first=dir_first, dir_total=dir_total)
+    return RGBData(path, extensions=('.png', '.bmp', '.jpg', '.jpeg'), dir_first=dir_first, dir_total=dir_total)
 
 
 def points(custom_points):
