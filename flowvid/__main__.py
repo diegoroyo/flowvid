@@ -33,17 +33,17 @@ parser = argparse.ArgumentParser(prog='flowvid',
 group_config = parser.add_argument_group('configuration')
 group_config.add_argument('preset', type=str, metavar='<preset>',
                           help='Video preset, see above')
-group_config.add_argument('-c', '--config', type=str, required=False, metavar='</path/to/config/file.yaml>',
+group_config.add_argument('-c', '--config', type=str, required=False, metavar='<path/to/config/file.yaml>',
                           help='Preset configuration file in YAML format')
 
 # Input
 group_input = parser.add_argument_group('input')
-group_input.add_argument('--flo-dir', type=str, required=False, metavar='</path/to/flo/dir>',
+group_input.add_argument('--flo-dir', type=str, required=False, metavar='<path/to/flo/dir>',
                          help='Directory to look for .flo files')
-group_input.add_argument('--flo-gt-dir', type=str, required=False, metavar='</path/to/flo-gt/dir>',
+group_input.add_argument('--flo-gt-dir', type=str, required=False, metavar='<path/to/flo-gt/dir>',
                          help='Directory to look for .flo GROUND TRUTH files')
 
-group_input.add_argument('--image-dir', type=str, required=False, metavar='</path/to/image/dir>',
+group_input.add_argument('--image-dir', type=str, required=False, metavar='<path/to/image/dir>',
                          help='Directory to look for image files')
 
 # Core / main processing
@@ -76,7 +76,7 @@ group_output.add_argument('--output-type', type=str, choices=('video', 'pyplot')
                           help='Save video file or show interactive pyplot window')
 group_output.add_argument('--output-framerate', type=int, required=False, metavar='<fps>',
                           help='Frames per second for the specified output type')
-group_output.add_argument('--output-filename', type=str, required=False, metavar='</path/to/video.mp4>',
+group_output.add_argument('--output-filename', type=str, required=False, metavar='<path/to/video.mp4>',
                           help='Filename generated for video output type')
 
 # parsing

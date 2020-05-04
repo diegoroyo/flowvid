@@ -28,6 +28,8 @@
 </tr>
 </table>
 
+`flowvid` is a toolkit for all things related to optical flow. It comes with many visualization presets you can generate with no effort (see below), but it also allows for more complex data manipulation that doesn't have to imply generating a visualization (see [examples](https://github.com/diegoroyo/flowvid/blob/master/examples)).
+
 ## Table of contents
 
 - [Installation](#installation)
@@ -64,13 +66,13 @@ pip3 install -r requirements.txt
 
 Flowvid is a python library for video generation, but it also contains several video presets with an user-friendly assistant:
 
-* Usage: `python3 -m flowvid `_`preset`_
+* Usage: `python3 -m flowvid `_`<preset>`_ `[ <config-params> | --config <config-file> ]`
 * Presets can be listed using `python3 -m flowvid -h`
 
 ```
 $ python3 -m flowvid -h
 
-usage: flowvid [-h] preset
+usage: flowvid [-h] <preset> [ <config-params> | --config <config-file> ]
 
 Generate an optical flow visualization using the available presets.
 
@@ -82,25 +84,64 @@ Preset can be one of:
   track_points: Place points in a image and see how flow moves them
   track_side_by_side: Place points in a image and see how flow can track them
 
-positional arguments:
-  preset      Video preset, see above.
-
 optional arguments:
-  -h, --help  show this help message and exit
+  -h, --help            show this help message and exit
+
+configuration:
+  <preset>              Video preset, see above
+  -c </path/to/config/file.yaml>, --config </path/to/config/file.yaml>
+                        Preset configuration file in YAML format
+
+input:
+  --flo-dir </path/to/flo/dir>
+                        Directory to look for .flo files
+(...)
 ```
 
 * Example: converting flow files to rgb and saving into a video
 
-```
+```bash
 $ python3 -m flowvid color_flow
 
-Flow files directory (default: flo): path/to/flo/dir 
-Vector normalize type (video, [frame], none): video
-Normalization clamp percentage (default: 1.0): 0.8
-Normalization gamma curve exponent (default: 1.0): 1.5
-Video framerate (default: 24): 12
-Output video name (default: output_color_flow.mp4): flowcolors.mp4 
+# \/ option names are shown here
+[--flo-dir] Flow files directory (default: flo): path/to/flo/dir
+[--norm-type] Vector normalization type (video, [frame], none): video
+[--norm-clamp] Normalization clamp percentage (default: 1.0): 0.8
+[--norm-gamma] Normalization gamma curve exponent (default: 1.0): 1.5
+[--output-type] Output type ([video], pyplot): pyplot
+[--output-framerate] Video framerate (default: 10): 10
 ```
+
+You can specify its parameters via the command line. The following is equivalent:
+
+```bash
+# Option names can be listed with python3 -m flowvid --help
+$ python3 -m flowvid color_flow
+    --flo-dir path/to/flo/dir
+    --norm-type video
+    --norm-clamp 0.8
+    --norm-gamma 1.5
+    --output-type pyplot
+    --output-framerate 10
+```
+
+Configuration can also be saved in a file so you don't have to type it always:
+
+```bash
+# Store configuration after use
+$ python3 -m flowvid color_flow --flo-dir path/to/flo/dir (...)
+
+Save configuration in a file? (y, [n]): y
+Output configuration filename (default: preset_color_flow.yaml): path/to/config.yaml
+
+Saved configuration file in path/to/config.yaml
+
+(...)
+
+# Load from a file
+$ python3 -m flowvid color_flow --config path/to/config.yaml
+```
+
 <p align="center">
 <img src="https://raw.githubusercontent.com/diegoroyo/flowvid/master/examples/images/color_flow.png" alt="color_flow result">
 </p>
