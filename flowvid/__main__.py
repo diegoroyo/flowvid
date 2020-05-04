@@ -108,6 +108,14 @@ else:
     config_from_file = True
 
 # execute and save
-presets[video_type](config)
+try:
+    presets[video_type](config)
+except Exception as exc:
+    print('')
+    print('/!\ An error ocurred:')
+    print('>', exc)
+    print('Your current configuration can be saved, edited and later loaded with --config <config-file>')
+    print('')
+
 if not config_from_file:
     save_config(config, video_type)
