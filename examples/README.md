@@ -35,7 +35,7 @@ flo(path, dir_first=0, dir_total=None)
 ## Input
 
 * `fv.input.flo(path)`: Read `.flo` files from path (file or directory).
-* `fv.input.rgb(path)`: Read `.png`, `.jpg` or `.bmp` files from path (file or directory).
+* `fv.input.rgb(path)`: Read `.png`, `.jpg`, `.jpeg` or `.bmp` files from path (file or directory).
 * `fv.input.rect(path)`: Read rectangle data from a text file.
 * `fv.input.points(array)`: Read point data from a (x, y) point array.
 * `fv.input.prompt_points(N, image)`: Let the user choose N points in an image in an interactive way.
@@ -77,6 +77,7 @@ points2 = fv.input.prompt_points(n_points, first_image)
 ## Data manipulation
 
 _Note: operations described here might have additional paramters of customization, check its docstring._
+_You can use python's `help` method: `help(fv.normalize_frame)`._
 
 * `fv.normalize_frame(data)`: Normalize flow/epe data (so module ranges from 0..1 instead of 0..n) with each frame's local maximum.
 * `fv.normalize_video(data, clamp_pct, gamma)`: Normalize flow/epe (so module ranges from 0..1 instead of 0..n) with the video's maximum. Can also apply a gamma curve with clamping to compensate if there's a high point.
@@ -125,7 +126,10 @@ rgb_data = fv.flow_to_rgb(flo_norm)
 # Display quiver plot
 # Make the background a bit dark (background_attenuation)
 # Use black arrows with flat color
-quiver_data = fv.draw_flow_arrows(rgb_data, flo_data, background_attenuation=0.2, color=[0, 0, 0], flat_colors=True)
+quiver_data = fv.draw_flow_arrows(rgb_data, flo_data,
+                                  background_attenuation=0.2,
+                                  color=[0, 0, 0],
+                                  flat_colors=True)
 
 # Show the quiver plot in an interactive video
 out = fv.output.show_plot(title='Quiver plot result', framerate=5)
