@@ -28,9 +28,10 @@
 </tr>
 </table>
 
-`flowvid` is a toolkit for all things related to optical flow. It comes with many visualization presets you can generate with no effort (see below), but it also allows for more complex data manipulation that doesn't have to imply generating a visualization (see [examples](https://github.com/diegoroyo/flowvid/blob/master/examples)).
 
 ## Table of contents
+
+`flowvid` is a toolkit for all things related to optical flow. It comes with many visualization presets you can generate with no effort (see below), but it also allows for more complex data manipulation that doesn't have to imply generating a visualization (see [examples](https://github.com/diegoroyo/flowvid/blob/master/examples)).
 
 - [Installation](#installation)
 - [Quick start](#quick-start)
@@ -62,6 +63,7 @@ pip3 install imageio imageio-ffmpeg numpy matplotlib Pillow
 pip3 install -r requirements.txt
 ```
 
+
 ## Quick start
 
 Flowvid is a python library for video generation, but it also contains several video presets with an user-friendly assistant:
@@ -70,12 +72,6 @@ Flowvid is a python library for video generation, but it also contains several v
 * Presets can be listed using `python3 -m flowvid -h`
 
 ```
-$ python3 -m flowvid -h
-
-usage: flowvid [-h] <preset> [ <config-params> | --config <config-file> ]
-
-Generate an optical flow visualization using the available presets.
-
 Preset can be one of:
   color_flow: Convert flow data to RGB using the Middlebury representation
   color_epe: Calculate endpoint error and generate a video representation
@@ -83,19 +79,6 @@ Preset can be one of:
   plot_epe: Generate a pyplot plot with the EPE distribution in all frames
   track_points: Place points in a image and see how flow moves them
   track_side_by_side: Place points in a image and see how flow can track them
-
-optional arguments:
-  -h, --help            show this help message and exit
-
-configuration:
-  <preset>              Video preset, see above
-  -c </path/to/config/file.yaml>, --config </path/to/config/file.yaml>
-                        Preset configuration file in YAML format
-
-input:
-  --flo-dir </path/to/flo/dir>
-                        Directory to look for .flo files
-(...)
 ```
 
 * Example: converting flow files to rgb and saving into a video
