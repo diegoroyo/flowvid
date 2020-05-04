@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://github.com/diegoroyo/flowvid">
-    <img src="https://raw.githubusercontent.com/diegoroyo/flowvid/master/examples/logo_square.png" alt="Logo" width=250 height=250>
+    <img src="https://raw.githubusercontent.com/diegoroyo/flowvid/master/examples/images/logo_square.png" alt="Logo" width=250 height=250>
   </a>
 
   <p align="center">
@@ -22,9 +22,9 @@
 
 <table align="center">
 <tr>
-<td align="center"><img src="https://raw.githubusercontent.com/diegoroyo/flowvid/master/examples/color_flow.png" alt="color_flow result"></td>
-<td align="center"><img src="https://raw.githubusercontent.com/diegoroyo/flowvid/master/examples/color_epe.png" alt="color_epe result"></td>
-<td align="center"><img src="https://raw.githubusercontent.com/diegoroyo/flowvid/master/examples/flow_arrows_1.png" alt="flow_arrows result"></td>
+<td align="center"><img src="https://raw.githubusercontent.com/diegoroyo/flowvid/master/examples/images/color_flow.png" alt="color_flow result"></td>
+<td align="center"><img src="https://raw.githubusercontent.com/diegoroyo/flowvid/master/examples/images/color_epe.png" alt="color_epe result"></td>
+<td align="center"><img src="https://raw.githubusercontent.com/diegoroyo/flowvid/master/examples/images/flow_arrows_1.png" alt="flow_arrows result"></td>
 </tr>
 </table>
 
@@ -102,22 +102,22 @@ Video framerate (default: 24): 12
 Output video name (default: output_color_flow.mp4): flowcolors.mp4 
 ```
 <p align="center">
-<img src="https://raw.githubusercontent.com/diegoroyo/flowvid/master/examples/color_flow.png" alt="color_flow result">
+<img src="https://raw.githubusercontent.com/diegoroyo/flowvid/master/examples/images/color_flow.png" alt="color_flow result">
 </p>
 
 Here are some examples illustrating the other presets' results:
 
 | **`color_epe`** | **`plot_epe`** |
 |---|---|
-| <img src="https://raw.githubusercontent.com/diegoroyo/flowvid/master/examples/color_epe.png" alt="color_epe result"> | <img src="https://raw.githubusercontent.com/diegoroyo/flowvid/master/examples/plot_epe.png" alt="plot_epe result"> |
+| <img src="https://raw.githubusercontent.com/diegoroyo/flowvid/master/examples/images/color_epe.png" alt="color_epe result"> | <img src="https://raw.githubusercontent.com/diegoroyo/flowvid/master/examples/images/plot_epe.png" alt="plot_epe result"> |
 
 | **`track_points`** | **`track_side_by_side`** |
 |---|---|
-| <img src="https://raw.githubusercontent.com/diegoroyo/flowvid/master/examples/track_points.png" alt="track_points result"> | <img src="https://raw.githubusercontent.com/diegoroyo/flowvid/master/examples/track_side_by_side.png" alt="track_side_by_side result"> |
+| <img src="https://raw.githubusercontent.com/diegoroyo/flowvid/master/examples/images/track_points.png" alt="track_points result"> | <img src="https://raw.githubusercontent.com/diegoroyo/flowvid/master/examples/images/track_side_by_side.png" alt="track_side_by_side result"> |
 
 | **`flow_arrows`** (1) | **`flow_arrows`** (2) |
 |---|---|
-| <img src="https://raw.githubusercontent.com/diegoroyo/flowvid/master/examples/flow_arrows_1.png" alt="flow_arrows result"> | <img src="https://raw.githubusercontent.com/diegoroyo/flowvid/master/examples/flow_arrows_2.png" alt="flow_arrows result"> |
+| <img src="https://raw.githubusercontent.com/diegoroyo/flowvid/master/examples/images/flow_arrows_1.png" alt="flow_arrows result"> | <img src="https://raw.githubusercontent.com/diegoroyo/flowvid/master/examples/images/flow_arrows_2.png" alt="flow_arrows result"> |
 
 ### Python library
 
