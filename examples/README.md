@@ -1,5 +1,7 @@
 # `flowvid` overview
 
+To get more information about a function, you can use python's `help` method (example below).
+
 * [Input](#input)
 * [Data manipulation](#data-manipulation)
   * [Flow normalization and conversion to RGB](#flow-normalization-and-conversion-to-rgb)
@@ -7,6 +9,28 @@
   * [Endpoint error normalization and conversion to RGB](#endpoint-error-normalization-and-conversion-to-rgb)
   * [Track a given set of points using optical flow](#track-a-given-set-of-points-using-optical-flow)
 * [Output](#output)
+
+```
+$ python3  # enter interactive shell
+
+>>> import flowvid as fv
+>>> help(fv.input.flo)
+
+Help on function flo in module flowvid.input:
+
+flo(path, dir_first=0, dir_total=None)
+    Read .flo files and process them as a list of flow data
+    Files must be encoded with the Middlebury .flo format:
+    http://vision.middlebury.edu/flow/code/flow-code/README.txt
+    :param path: Either a file or a directory
+    :param dir_first: If path is a directory and contains elements 0..n-1,
+                        return elements from range dir_first..n-1
+                        (defaults to 0)
+    :param dir_total: If path is a directory, set number of elements to return
+                        e.g. if it contains elements 0..n-1, return dir_first..dir_first+dir_total
+                        (if None, return all elements from the directory)
+    :returns: Iterable and indexable list of flow data
+```
 
 ## Input
 
@@ -58,6 +82,7 @@ _Note: operations described here might have additional paramters of customizatio
 * `fv.normalize_video(data, clamp_pct, gamma)`: Normalize flow/epe (so module ranges from 0..1 instead of 0..n) with the video's maximum. Can also apply a gamma curve with clamping to compensate if there's a high point.
 * `fv.accumulate(flow)`: Accumulate optical flow from first frame, so instead of it being from images 0->1, 1->2, 2->3, etc. it goes from images 0->1, 0->2, 0->3, etc.
 ---
+* `fv.split_uv(flow, channel, data_type)`: Separate horizontal/vertical flow and retrieve it in an array/flo/rgb format.
 * `fv.flow_to_rgb(flow)`: Convert flow data to RGB using Middlebury's color circle representation.
 * `fv.epe_to_rgb(epe)`: Convert EPE data to RGB, where brighter colors mean that the error is bigger on that point.
 ---

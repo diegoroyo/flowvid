@@ -107,6 +107,8 @@ def split_uv(flow, channel='u', data_type='ndarray', ignore_rgb_warning=False):
         :param flow: List of flow data, see fv.input.flo(...)
         :param channel: U for horizontal flow, V for vertical
         :param data_type: ndarray (raw), flo or rgb data.
+                          Either 1 channel (ndarray), 2 channels with the other set to 0 (flo),
+                          or 3 channels as RGB grayscale data (rgb)
                           Important note: If you use rgb, you must also normalize
                           the flow data (see fv.normalize_frame(...) or fv.normalize_video(...))
         :param ignore_rgb_warning: Ignore the important note about using rgb data_type
