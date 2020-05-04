@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="flowvid",
-    version="0.3.0",
+    version="0.4.0",
     author="Diego Royo",
     author_email="740388@unizar.es",
     description="Optical Flow video tools",

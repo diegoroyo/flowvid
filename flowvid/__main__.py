@@ -2,7 +2,6 @@ import sys
 import argparse
 import textwrap
 import numpy as np
-import flowvid as fv
 
 from .presets.preset_color_flow import preset_color_flow
 from .presets.preset_color_epe import preset_color_epe

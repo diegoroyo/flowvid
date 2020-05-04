@@ -111,11 +111,17 @@ def save_config(kwargs, preset_name):
     kwargs.pop('preset')
 
     with open(config_filename, 'w+') as f:
-        f.write('# flowvid configuration file: https://pypi.org/project/flowvid/\n')
+        f.write('# flowvid v{v} configuration file: https://pypi.org/project/flowvid/\n'.format(
+                v=fv.__version__))
         f.write('# Created on {d} for preset {p}\n'.format(
                 d=datetime.datetime.now(), p=preset_name))
+        f.write('#\n')
         f.write('# You can edit/delete this file, as you like\n')
         f.write('# Usage: python3 -m flowvid {p} --config {f}\n'.format(
                 p=preset_name, f=config_filename))
         f.write('\n')
         f.write(yaml.dump(kwargs))
+
+    print('')
+    print('Saved configuration file in {f}'.format(
+        f=os.path.join(os.getcwd(), config_filename)))
