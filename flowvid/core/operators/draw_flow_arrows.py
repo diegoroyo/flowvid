@@ -52,12 +52,12 @@ class DrawFlowArrows(Operator):
         [h, w] = flow_data[0].shape[0:2]
         self._subsample_x = subsample_ratio
         self._subsample_y = subsample_ratio
-        if (subsample_ratio % h != 0 or subsample_ratio % w != 0) and not ignore_ratio_warning:
+        if (h % subsample_ratio != 0 or w % subsample_ratio != 0) and not ignore_ratio_warning:
             rem_w = (w % subsample_ratio) / (w // subsample_ratio)
             rem_h = (h % subsample_ratio) / (h // subsample_ratio)
             self._subsample_x = subsample_ratio + rem_w
             self._subsample_y = subsample_ratio + rem_h
-            print('Warning: subsample_ratio resized from ({o}, {o}) to ({nx}, {ny}) to fit image size of ({w}, {h})\nYou can try to fix it by modifying subsample_ratio parameter\n'.format(
+            print('Warning: subsample_ratio resized from ({o}, {o}) to ({nx}, {ny}) to fit image size of ({w}, {h})\nYou can try to fix it by modifying subsample_ratio parameter, but this should work too.\n'.format(
                 o=subsample_ratio, nx=self._subsample_x, ny=self._subsample_y, w=w, h=h))
         self._arrow_width = subsample_ratio / 20.0
 
