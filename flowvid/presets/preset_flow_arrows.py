@@ -1,27 +1,31 @@
-from .utils import ask_string, ask_multichoice, ask_video_or_figure
+from .utils import get_arg, ask_string, ask_multichoice, ask_video_or_figure
 import numpy as np
 import flowvid as fv
 
 
-def preset_flow_arrows():
+def preset_flow_arrows(kwargs):
     # Flow files and RGB frames of video
-    flo_dir = ask_string('Flow files directory ({s}): ', default='flo')
+    flo_dir = get_arg(kwargs, 'flo_dir',
+                      lambda: ask_string('Flow files directory ({s}): ', default='flo', is_path=True))
 
     # Background settings
-    use_flow = ask_multichoice('Use flow colors for image? ({s}): ',
-                               answer_map={'yes': True, 'no': False}, default='no')
+    use_flow = get_arg(kwargs, 'use_flow_colors',
+                       lambda: ask_multichoice('Use flow colors for image? ({s}): ',
+                                               answer_map={'y': True, 'n': False}, default='n'))
     if use_flow:
         arrow_color = [0, 0, 0]
     else:
         arrow_color = 'flow'
-        rgb_dir = ask_string('Image directory ({s}): ', default='png')
+        rgb_dir = get_arg(kwargs, 'image_dir',
+                          lambda: ask_string('Image directory ({s}): ', default='png', is_path=True))
 
     # Arrow subsampling
-    subsample_ratio = int(ask_string(
-        'Flow subsample ratio ({s}): ', default='16'))
+    subsample_ratio = get_arg(kwargs, 'subsample_ratio',
+                              lambda: float(ask_string('Flow subsample ratio ({s}): ', default='16.0')))
 
     # Output options
-    out_figure, out_options = ask_video_or_figure('output_flow_arrows.mp4')
+    out_figure, out_options = ask_video_or_figure(
+        kwargs, 'output_flow_arrows.mp4')
 
     # Add points and generate image
     flo_data = fv.input.flo(flo_dir)

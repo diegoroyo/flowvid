@@ -1,22 +1,25 @@
-from .utils import ask_string, ask_multichoice, ask_video_or_figure
+from .utils import get_arg, ask_string, ask_multichoice, ask_video_or_figure
 import flowvid as fv
 
 
-def preset_color_flow():
+def preset_color_flow(kwargs):
     # Flow files
-    flo_dir = ask_string('Flow files directory ({s}): ', default='flo')
+    flo_dir = get_arg(kwargs, 'flo_dir',
+                      lambda: ask_string('Flow files directory ({s}): ', default='flo', is_path=True))
 
     # Flow normalization
-    norm_type = ask_multichoice('Vector normalization type ({s}): ',
-                                answer_map={'video': 'video', 'frame': 'frame', 'none': None}, default='frame')
+    norm_type = get_arg(kwargs, 'norm_type',
+                        lambda: ask_multichoice('Vector normalization type ({s}): ',
+                                                answer_map={'video': 'video', 'frame': 'frame', 'none': 'none'}, default='frame'))
     if norm_type == 'video':
-        clamp_pct = float(ask_string(
-            'Normalization clamp percentage ({s}): ', default='1.0'))
-        gamma = float(ask_string(
-            'Normalization gamma curve exponent ({s}): ', default='1.0'))
+        clamp_pct = get_arg(kwargs, 'norm_clamp', lambda: float(ask_string(
+            'Normalization clamp percentage ({s}): ', default='1.0')))
+        gamma = get_arg(kwargs, 'norm_gamma', lambda: float(ask_string(
+            'Normalization gamma curve exponent ({s}): ', default='1.0')))
 
     # Output options
-    out_figure, out_options = ask_video_or_figure('output_color_flow.mp4')
+    out_figure, out_options = ask_video_or_figure(
+        kwargs, 'output_color_flow.mp4')
 
     # Read flow data and normalize
     flo_data = fv.input.flo(flo_dir)

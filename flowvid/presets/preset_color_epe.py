@@ -1,26 +1,32 @@
-from .utils import ask_string, ask_multichoice, ask_video_or_figure
+from .utils import get_arg, ask_string, ask_multichoice, ask_video_or_figure
 import numpy as np
 import flowvid as fv
 
 
-def preset_color_epe():
+def preset_color_epe(kwargs):
     # Flow directories
-    flo_est_dir = ask_string(
-        'Estimated flow files directory ({s}): ', default='flo_est')
-    flo_gt_dir = ask_string(
-        'Ground truth flow files directory ({s}): ', default='flo_gt')
+    flo_est_dir = get_arg(kwargs, 'flo_dir',
+                          lambda: ask_string(
+                              'Estimated flow files directory ({s}): ', default='flo_est', is_path=True))
+    flo_gt_dir = get_arg(kwargs, 'flo_gt_dir',
+                         lambda: ask_string(
+                             'Ground truth flow files directory ({s}): ', default='flo_gt', is_path=True))
 
     # Flow normalization
-    norm_type = ask_multichoice('EPE normalization type ({s}): ',
-                                answer_map={'video': 'video', 'frame': 'frame', 'none': None}, default='frame')
+    norm_type = get_arg(kwargs, 'norm_type',
+                        lambda: ask_multichoice('EPE normalization type ({s}): ',
+                                                answer_map={'video': 'video', 'frame': 'frame', 'none': None}, default='frame'))
     if norm_type == 'video':
-        clamp_pct = float(ask_string(
-            'Normalization clamp percentage ({s}): ', default='1.0'))
-        gamma = float(ask_string(
-            'Normalization gamma curve exponent ({s}): ', default='1.0'))
+        clamp_pct = get_arg(kwargs, 'norm_clamp',
+                            lambda: float(ask_string(
+                                'Normalization clamp percentage ({s}): ', default='1.0')))
+        gamma = get_arg(kwargs, 'norm_gamma',
+                        lambda: float(ask_string(
+                            'Normalization gamma curve exponent ({s}): ', default='1.0')))
 
     # Output options
-    out_figure, out_options = ask_video_or_figure('output_color_epe.mp4')
+    out_figure, out_options = ask_video_or_figure(
+        kwargs, 'output_color_epe.mp4')
 
     # Generate EPE data
     flo_est = fv.input.flo(flo_est_dir)
