@@ -48,7 +48,7 @@ class FileInput(Filterable):
                 'There are no {f} files in directory {d}'.format(f=extensions, d=directory))
 
         for name in name_list:
-            match = pattern.match(name)
+            match = pattern.search(name)
             if match is not None:
                 file_index = match[0]
                 file_path = os.path.join(directory, name)

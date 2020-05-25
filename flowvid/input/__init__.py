@@ -7,6 +7,9 @@ from .point_input import pyplot_prompt
 def flo(path, dir_first=0, dir_total=None):
     """
         Read .flo files and process them as a list of flow data
+        Orders files by searching for the first number that appears in its name:
+        for example, if the directory contains "seq_0001.flo" and "seq_0002.flo",
+        it uses "0001" and "0002" as order keys
         Files must be encoded with the Middlebury .flo format:
         http://vision.middlebury.edu/flow/code/flow-code/README.txt
         :param path: Either a file or a directory
@@ -23,7 +26,10 @@ def flo(path, dir_first=0, dir_total=None):
 
 def rgb(path, dir_first=0, dir_total=None):
     """
-        Read .png/.bmp/.jpg files and process them as a list of RGB data
+        Read .png/.bmp/.jpg/.jpeg files and process them as a list of RGB data
+        Orders files by searching for the first number that appears in its name:
+        for example, if the directory contains "seq_0001.png" and "seq_0002.png",
+        it uses "0001" and "0002" as order keys
         :param path: Either a file or a directory
         :param dir_first: If path is a directory and contains elements 0..n-1,
                             return elements from range dir_first..n-1
