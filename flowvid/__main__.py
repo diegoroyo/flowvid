@@ -70,6 +70,9 @@ group_core.add_argument('--use-flow-colors', type=str, choices=('y', 'n'), requi
 group_core.add_argument('--subsample-ratio', type=float, required=False, metavar='[0.0..]',
                         help='Do the mean in a square of given size in pixels')
 
+group_core.add_argument('--accumulate-flow', type=str, choices=('y', 'n'), required=False,
+                        help='When calculating multiple frames, accumulate all flow vectors from the first one.')
+
 # Output
 group_output = parser.add_argument_group('output')
 group_output.add_argument('--output-type', type=str, choices=('video', 'pyplot'), required=False,

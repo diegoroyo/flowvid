@@ -1,4 +1,4 @@
-from .utils import get_arg, ask_string, ask_for_points, ask_video_or_figure
+from .utils import get_arg, ask_string, ask_multichoice, ask_for_points, ask_video_or_figure
 import flowvid as fv
 
 
@@ -6,6 +6,9 @@ def preset_track_points(kwargs):
     # Flow files and RGB frames of video
     flo_dir = get_arg(kwargs, 'flo_dir',
                       lambda: ask_string('Flow files directory ({s}): ', default='flo', is_path=True))
+    accumulate = get_arg(kwargs, 'accumulate_flow',
+                         lambda: ask_multichoice('Accumulate flow vectors for each frame since the first? ({s}): ',
+                                                 answer_map={'y': True, 'n': False}, default='y'))
     rgb_dir = get_arg(kwargs, 'image_dir',
                       lambda: ask_string('Image directory ({s}): ', default='png', is_path=True))
 
@@ -18,7 +21,7 @@ def preset_track_points(kwargs):
     rgb_data = fv.input.rgb(rgb_dir)
     points = ask_for_points(kwargs, rgb_data[0])
     points = fv.add_flow_points(
-        points[0], flo_data, interpolate=True, accumulate=True)
+        points[0], flo_data, interpolate=True, accumulate=accumulate)
     image_data = fv.draw_points(
         rgb_data, points, color='random', num_trail=4, figure_output=out_figure)
 
