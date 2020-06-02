@@ -11,6 +11,8 @@ from .presets.preset_track_points import preset_track_points
 from .presets.preset_track_side_by_side import preset_track_side_by_side
 from .presets.utils import load_config, save_config
 
+DEBUG = 0  # debug levels (0: no debug, 1: extended traceback on exception, 2: profiling)
+
 description = textwrap.dedent(
     '''\
     Generate an optical flow visualization using the available presets.
@@ -107,11 +109,19 @@ else:
 
 # execute and save
 try:
-    presets[video_type](config)
+    if DEBUG > 1:
+        import cProfile
+        cProfile.run('presets[video_type](config)', 'profile_results')
+    else:
+        presets[video_type](config)
 except Exception as exc:
     print('')
     print('/!\ An error ocurred:')
-    print('>', exc)
+    if DEBUG > 0:
+        import traceback
+        traceback.print_exc()
+    else:
+        print('>', exc)
     print('Your current configuration can be saved, edited and later loaded with --config <config-file>')
     print('')
 

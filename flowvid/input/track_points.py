@@ -1,10 +1,10 @@
 import numpy as np
-from numpy import genfromtxt
 from ..core.filterable import Filterable
 from .file_input import FileInput
 
 
 class TrackPoints(FileInput):
+    """ Track N points over M multiple frames, MxNx2 (x, y) array """
 
     def __init__(self, points):
         """ Constructor with custom points for one frame """
@@ -20,7 +20,7 @@ class TrackPoints(FileInput):
         self._points = points
 
     def _items(self):
-        return (self._points[i, :] for i in range(len(self._points)))
+        return (self._points[i, :] for i in range(len(self)))
 
     def __len__(self):
         return self._points.shape[0]
@@ -35,6 +35,7 @@ class TrackPoints(FileInput):
 
 
 class TrackRectangles(FileInput):
+    """ Track 4 points that form a rectangle over M frames, Mx4 """
 
     def __init__(self, path, rect_format, elem_first, elem_total):
         FileInput.__init__(self, path)
@@ -42,7 +43,7 @@ class TrackRectangles(FileInput):
             self.source[0], rect_format, elem_first, elem_total)
 
     def _items(self):
-        return (self._points[i, :] for i in range(len(self._points)))
+        return (self._points[i, :] for i in range(len(self)))
 
     def __len__(self):
         return self._points.shape[0]
@@ -57,7 +58,7 @@ class TrackRectangles(FileInput):
 
     @staticmethod
     def __read_rectangles(source, rec_format, elem_first, elem_total):
-        raw = genfromtxt(source, delimiter=' ')
+        raw = np.genfromtxt(source, delimiter=' ')
         [cols, rows] = raw.shape
         if rows < 4:
             raise AssertionError(

@@ -61,7 +61,7 @@ def normalize_video(data, clamp_pct=1.0, gamma=1.0, verbose=False):
         return data._add_filter(NormalizeEPEVideo(data, clamp_pct, gamma, verbose))
 
 
-def accumulate(flow, interpolate=True):
+def accumulate(flow, interpolate=False):
     """
         Accumulate optical flow from first frame, so instead
         of it being from images 0->1, 1->2, 2->3, etc. it goes
@@ -69,6 +69,7 @@ def accumulate(flow, interpolate=True):
         :param flow: List of flow data, see fv.input.flo(...)
         :param interpolate: If true, flow in a point is added by interpolating from its
                             four closest pixels. If false, it only uses the closest pixel.
+                            Interpolation comes with a big cost.
         :returns: List of flow data, accumulated from the first frame.
     """
     if not isinstance(flow, Filterable):
@@ -91,7 +92,7 @@ def flow_to_rgb(flow):
     return FlowToRGB(flow)
 
 
-def epe_to_rgb(epe, color=[255, 255, 0]):
+def epe_to_rgb(epe, color=[255, 255, 255]):
     """
         Convert EPE data into RGB data, where brighter color means higher EPE
         :param epe: List of EPE data, see fv.endpoint_error(...)
