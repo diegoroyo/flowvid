@@ -18,9 +18,9 @@ class TrackFromFirst(Operator):
         if not isinstance(image_data, Filterable):
             raise AssertionError(
                 'image_data should contain a list of image data')
-        if (not isinstance(color, list) or len(color) != 3) and color != 'random':
+        if (not isinstance(color, tuple) or len(color) != 3) and color != 'random':
             raise AssertionError(
-                'color should be a [r, g, b] list where rgb range from 0 to 255, or \'random\' for random colors.')
+                'color should be a (r, g, b) tuple where rgb range from 0 to 255, or \'random\' for random colors.')
         point_data.assert_type('point')
         image_data.assert_type('rgb')
         Operator.__init__(self)
@@ -54,7 +54,7 @@ class TrackFromFirst(Operator):
                     for i, (p0, p1) in enumerate(zip(first_point, curr_point)):
                         color = get_color(self._color, i, normalize=True)
                         ax.scatter((p0[0], p1[0]), (p0[1], p1[1]),
-                                    marker='+', color=[color])
+                                   marker='+', color=[color])
                         ax.plot((p0[0], p1[0]), (p0[1], p1[1]), color=color)
                 yield ax
             else:

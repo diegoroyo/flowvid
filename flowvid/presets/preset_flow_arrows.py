@@ -13,7 +13,7 @@ def preset_flow_arrows(kwargs):
                        lambda: ask_multichoice('Use flow colors for image? ({s}): ',
                                                answer_map={'y': True, 'n': False}, default='n'))
     if use_flow:
-        arrow_color = [0, 0, 0]
+        arrow_color = (0, 0, 0)
     else:
         arrow_color = 'flow'
         rgb_dir = get_arg(kwargs, 'image_dir',
@@ -34,7 +34,7 @@ def preset_flow_arrows(kwargs):
         rgb_data = fv.flow_to_rgb(flo_data_norm)
         background_attenuation = 0.0
         flat_colors = True
-        arrow_color = [0, 0, 0]
+        arrow_color = (0, 0, 0)
     else:
         rgb_data = fv.input.rgb(rgb_dir)
         background_attenuation = 0.4

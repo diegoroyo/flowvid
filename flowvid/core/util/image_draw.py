@@ -19,6 +19,7 @@ def draw_points(image, points, color, cross=True):
     """
         :param image: [h, w, 3] rgb data
         :param points: [n, 2] ndarray (x, y)
+        :param color: (r, g, b) tuple color of the line, or 'random' for random color
         :returns: image with modified RGB such that points are drawn with color
                   Note: if color == 'random', a different color is chosen for
                   each point (but each color is consistent between frames)
@@ -49,12 +50,11 @@ def draw_line(image, line, color):
     """
         :param image: [h, w, 3] rgb data
         :param line: [2, 2] ndarray ((p0x, p0y), (p1x, p1y)) line between p0-p1
-        :param color: [r, g, b] color of the line
+        :param color: (r, g, b) tuple color of the line
         :returns: image with modified RGB such that line is drawn on it
                     Note: if self_color == 'random', a different color is chosen for
                         each line (but each color is consistent between frames)
     """
-
     # Clamping
     [h, w] = image.shape[0:2]
     line = line.astype(int)

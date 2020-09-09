@@ -4,10 +4,12 @@ import numpy as np
 
 def pyplot_prompt(n, background):
     """
-        Show a pyplot prompt with the given background and
-        return a [n, 2] ndarray with all the points selected
+        Show a pyplot prompt with the given background to let the user select points graphically
+        :param n: Number of points to choose
+        :param background: Either a (height, width) tuple or a (height, width, 3) image ndarray
+        :returns: [n, 2] ndarray with all the points selected
     """
-    if isinstance(background, tuple):
+    if isinstance(background, tuple) and len(background) == 2:
         (h, w) = background
         background = np.zeros((h, w, 3))
     elif not (isinstance(background, np.ndarray) and background.ndim == 3 and background.shape[2] == 3):

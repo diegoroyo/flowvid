@@ -26,9 +26,9 @@ def _interpolate_flow(flow, fx, fy):
 def add_flows(flow1, flow2, interpolate):
     """
         Calculate the result of accumulating flow1 and flow2.
+        CAUTION: assumes that both flow1 and flow2 have the same shape.
         :param interpolate: Use 4 closest pixels instead of just the closest one.
     """
-    assert flow1.shape == flow2.shape, 'Different flow shapes on add_flows'
     [h, w] = flow1.shape[0:2]
 
     indexes = np.empty((h, w, 2))
@@ -58,8 +58,9 @@ def add_flows(flow1, flow2, interpolate):
     return flow1 + add_func(flow2, x_points, y_points)
 
 
-def add_flow_points(flow, points, interpolate):
+def add_flow_points(flow, points, interpolate: bool):
     """
+        :param flow: [h, w, 2] (u, v components)
         :param points: [n, 2] ndarray (x0 y0)
         :param interpolate: Use 4 closest points to interpolate flow / use closest
         :returns: [n, 2] ndarray with the moved points

@@ -26,7 +26,7 @@ class AccumFlow(Filter):
             :param data: [h, w, 2] (u, v components)
             :returns: [h, w, 2] with accumulated optical flow data
         """
-        if not isinstance(data, np.ndarray) or not data.ndim == 3:
+        if not isinstance(data, np.ndarray) or not data.ndim == 3 or not data.shape[2] == 2:
             raise AssertionError('Data should be [h, w, 2] flow data ndarray')
         self._accum = add_flows(self._accum, data, self._interpolate)
-        return self._accum
+        return np.copy(self._accum)

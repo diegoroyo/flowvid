@@ -19,9 +19,9 @@ class DrawRectangle(Operator):
         if not isinstance(rect_data, Filterable):
             raise AssertionError(
                 'rect_data should contain a list of rectangle points data')
-        if not isinstance(color, list) or len(color) != 3:
+        if not isinstance(color, tuple) or len(color) != 3:
             raise AssertionError(
-                'color should be a [r, g, b] list where rgb range from 0 to 255')
+                'color should be a (r, g, b) tuple where rgb range from 0 to 255')
         image_data.assert_type('rgb', 'figure')
         if image_data.get_type() == 'figure' and not figure_output:
             raise AssertionError(

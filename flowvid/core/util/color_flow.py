@@ -51,9 +51,6 @@ def flow_to_rgb(flo_data):
                          (must be normalized to 0-1 range)
         :returns: [h, w, 3] ndarray (rgb data) using color wheel
     """
-    if not isinstance(flo_data, np.ndarray) or not flo_data.ndim == 3:
-        raise AssertionError('Data should be [h, w, 2] flow data ndarray')
-
     ncols = len(_colorwheel)
 
     fu = flo_data[:, :, 0]

@@ -19,9 +19,9 @@ class DrawPoints(Operator):
         if not isinstance(point_data, Filterable):
             raise AssertionError(
                 'point_data should contain a list of points data')
-        if (not isinstance(color, list) or len(color) != 3) and color != 'random':
+        if (not isinstance(color, tuple) or len(color) != 3) and color != 'random':
             raise AssertionError(
-                'color should be a [r, g, b] list where rgb range from 0 to 255, or \'random\' for random colors.')
+                'color should be a (r, g, b) tuple where rgb range from 0 to 255, or \'random\' for random colors.')
         image_data.assert_type('rgb', 'figure')
         if image_data.get_type() == 'figure' and not figure_output:
             raise AssertionError(

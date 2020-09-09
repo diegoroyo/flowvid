@@ -23,9 +23,9 @@ class DrawFlowArrows(Operator):
         if not isinstance(flow_data, Filterable):
             raise AssertionError(
                 'flow_data should contain a list of flow data')
-        if (not isinstance(color, list) or len(color) != 3) and color != 'flow':
+        if (not isinstance(color, tuple) or len(color) != 3) and color != 'flow':
             raise AssertionError(
-                'color should be a [r, g, b] list where rgb range from 0 to 255, or \'flow\' for flow colors.')
+                'color should be a (r, g, b) tuple where rgb range from 0 to 255, or \'flow\' for flow colors.')
         image_data.assert_type('rgb', 'figure')
         flow_data.assert_type('flo')
 
@@ -57,8 +57,9 @@ class DrawFlowArrows(Operator):
             rem_h = (h % subsample_ratio) / (h // subsample_ratio)
             self._subsample_x = subsample_ratio + rem_w
             self._subsample_y = subsample_ratio + rem_h
-            print('Warning: subsample_ratio resized from ({o}, {o}) to ({nx}, {ny}) to fit image size of ({w}, {h})\nYou can try to fix it by modifying subsample_ratio parameter, but this should work too.\n'.format(
-                o=subsample_ratio, nx=self._subsample_x, ny=self._subsample_y, w=w, h=h))
+            print('Warning: subsample_ratio resized from ({o}, {o}) to ({nx}, {ny}) to fit image size of ({w}, {h}).\n'
+                  'You can try to fix it by modifying subsample_ratio parameter, but this should work too.\n'.format(
+                      o=subsample_ratio, nx=self._subsample_x, ny=self._subsample_y, w=w, h=h))
         self._arrow_width = subsample_ratio / 20.0
 
     def _items(self):

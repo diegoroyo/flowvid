@@ -1,5 +1,7 @@
 import numpy as np
 
+from typing import Union
+
 from .filterable import Filterable
 
 from .filters.normalize_flow import NormalizeFlowFrame, NormalizeFlowVideo
@@ -41,7 +43,7 @@ def normalize_frame(data):
         return data._add_filter(NormalizeEPEFrame())
 
 
-def normalize_video(data, clamp_pct=1.0, gamma=1.0, verbose=False):
+def normalize_video(data, clamp_pct: float = 1.0, gamma: float = 1.0, verbose: bool = False):
     """
         Normalize flow/epe (so module ranges from 0..1 instead of 0..n)
         with the video's maximum. Can also apply a gamma curve with
@@ -61,7 +63,7 @@ def normalize_video(data, clamp_pct=1.0, gamma=1.0, verbose=False):
         return data._add_filter(NormalizeEPEVideo(data, clamp_pct, gamma, verbose))
 
 
-def accumulate(flow, interpolate=False):
+def accumulate(flow, interpolate: bool = False):
     """
         Accumulate optical flow from first frame, so instead
         of it being from images 0->1, 1->2, 2->3, etc. it goes
@@ -92,30 +94,31 @@ def flow_to_rgb(flow):
     return FlowToRGB(flow)
 
 
-def epe_to_rgb(epe, color=[255, 255, 255]):
+def epe_to_rgb(epe, color: tuple = (255, 255, 255)):
     """
         Convert EPE data into RGB data, where brighter color means higher EPE
         :param epe: List of EPE data, see fv.endpoint_error(...)
-        :param color: Brightest color to set in the image
+        :param color: Brightest color to set in the image for the highest EPE,
+                      lower EPE are set to darker tones of the same color
         :returns: List of RGB data
     """
     return EPEToRGB(epe, color)
 
 
-def split_uv(flow, channel='u', data_type='ndarray', ignore_rgb_warning=False):
+def split_uv(flow, channel: str = 'u', output_type: str = 'ndarray', ignore_rgb_warning: bool = False):
     """
         Split flow data into u, v channels (horizontal/vertical movement)
         :param flow: List of flow data, see fv.input.flo(...)
         :param channel: U for horizontal flow, V for vertical
-        :param data_type: ndarray (raw), flo or rgb data.
-                          Either 1 channel (ndarray), 2 channels with the other set to 0 (flo),
-                          or 3 channels as RGB grayscale data (rgb)
-                          Important note: If you use rgb, you must also normalize
-                          the flow data (see fv.normalize_frame(...) or fv.normalize_video(...))
-        :param ignore_rgb_warning: Ignore the important note about using rgb data_type
-        :returns: List of modified data, according to channel and data_type
+        :param output_type: ndarray (raw), flo or rgb data.
+                            Either 1 channel (ndarray), 2 channels with the other set to 0 (flo),
+                            or 3 channels as RGB grayscale data (rgb)
+                            Important note: If you use rgb, you must also normalize
+                            the flow data (see fv.normalize_frame(...) or fv.normalize_video(...))
+        :param ignore_rgb_warning: Ignore the important note about using rgb output_type
+        :returns: List of modified data, according to channel and output_type
     """
-    return SplitUV(flow, channel, data_type, ignore_rgb_warning)
+    return SplitUV(flow, channel, output_type, ignore_rgb_warning)
 
 
 """
@@ -123,26 +126,27 @@ def split_uv(flow, channel='u', data_type='ndarray', ignore_rgb_warning=False):
 """
 
 
-def draw_rectangle(image, rect, color=[255, 0, 0], figure_output=False):
+def draw_rectangle(image, rect, color: tuple = (255, 0, 0), figure_output: bool = False):
     """
         Operator. Given a list of images and rectangles,
         draw each rectangle in each of the images from the image list
         :param image: List of rgb data, see fv.input.rgb(...)
         :param rect: List of rect data, see fv.input.rect(...)
-        :param color: [r, g, b] list, color of the rectangle (default: red)
+        :param color: (r, g, b) tuple, color of the rectangle (default: red)
         :param figure_output: Output as a figure instead of RGB image
         :returns: Iterable object with all the images, with each rectangle drawn
     """
     return DrawRectangle(image, rect, color, figure_output)
 
 
-def draw_points(image, points, color='random', num_trail=1, figure_output=False):
+def draw_points(image, points, color: Union[str, tuple] = 'random',
+                num_trail: int = 1, figure_output: bool = False):
     """
         Operator. Given a list of images and sets of points,
         draw each set of points in each of the images from the image list
         :param image: List of rgb data, see fv.input.rgb(...)
         :param points: List of points data, see fv.input.points(...)
-        :param color: [r, g, b] list, color of the points. Can be 'random' so each point
+        :param color: (r, g, b) tuple, color of the points. Can be 'random' so each point
                       is of a random color (consistent between frames, default mode).
         :param num_trail: Draw a line across the N last sets of points
         :param figure_output: Output as a figure instead of RGB image
@@ -151,9 +155,10 @@ def draw_points(image, points, color='random', num_trail=1, figure_output=False)
     return DrawPoints(image, points, color, num_trail, figure_output)
 
 
-def draw_flow_arrows(image_data, flow_data, background_attenuation=0,
-                     color='flow', flat_colors=False, arrow_min_alpha=1,
-                     subsample_ratio=5, ignore_ratio_warning=False):
+def draw_flow_arrows(image_data, flow_data, background_attenuation: float = 0,
+                     color: Union[str, tuple] = 'flow', flat_colors: bool = False,
+                     arrow_min_alpha: float = 1, subsample_ratio: float = 5,
+                     ignore_ratio_warning: bool = False):
     """
         Operator. Given a list of images and flow data, draw a visual representation
         of the flow using arrows on top of the image
@@ -161,7 +166,7 @@ def draw_flow_arrows(image_data, flow_data, background_attenuation=0,
         :param flow_data: List of flow data, see fv.input.flo(...)
         :param background_attenuation: Fade the background image to black,
                                        0 means normal background, 1 means all black
-        :param color: [r, g, b] list, color of the arrows. Can be 'flow' so each arrow
+        :param color: (r, g, b) tuple, color of the arrows. Can be 'flow' so each arrow
                       is colored according to its direction using this color circle:
                       http://www.quadibloc.com/other/colint.htm
         :param flat_colors: If True, larger arrows are painted in lighter colors,
@@ -175,11 +180,12 @@ def draw_flow_arrows(image_data, flow_data, background_attenuation=0,
         :returns: List of images with arrows drawn
     """
     return DrawFlowArrows(image_data, flow_data, background_attenuation,
-                          color, flat_colors, arrow_min_alpha,
-                          subsample_ratio, ignore_ratio_warning)
+                          color, flat_colors,
+                          arrow_min_alpha, subsample_ratio,
+                          ignore_ratio_warning)
 
 
-def add_flow_rect(rect, flow, interpolate=True, accumulate=True):
+def add_flow_rect(rect, flow, interpolate: bool = True, accumulate: bool = True):
     """
         Operator. Given one rectangle and a list of flow data,
         move the rectangle with respect to the flow in that pixel
@@ -195,12 +201,12 @@ def add_flow_rect(rect, flow, interpolate=True, accumulate=True):
     return AddFlowRect(rect, flow, interpolate, accumulate)
 
 
-def add_flow_points(points, flow, interpolate=True, accumulate=True):
+def add_flow_points(points, flow, interpolate: bool = True, accumulate: bool = True):
     """
         Operator. Given a list of points (for one frame) and a
         list of flow data, move the points with respect to the flow
         in that pixel for each given flow frame
-        :param points: Set of points, [n, 2] ndarray (x, y)
+        :param points: List of points, [n, 2] ndarray (x, y)
         :param flow: List of flow data, see fv.input.flo(...)
         :param interpolate: Use bilinear interpolation for flow estimation,
                             or approximate using nearest pixel
@@ -222,19 +228,21 @@ def endpoint_error(flow_est, flow_gt):
     return EndPointError(flow_est, flow_gt)
 
 
-def track_from_first(point_data, image_data, color='random', draw_lines=True, vertical=False, figure_output=False):
+def track_from_first(point_data, image_data, color: Union[str, tuple] = 'random',
+                     draw_lines: bool = True, vertical: bool = False, figure_output: bool = False):
     """
-        Operator. Given a set of points and image data, track the set
-        of points to see if they track the image's features correctly
+        Operator. Given a list of points and image data, draw the points on the
+        image (for example, to see if they track the image's features correctly)
         :param point_data: List of points data, see fv.input.points(...)
         :param image_data: List of rgb data, see fv.input.rgb(...)
-        :param color: [r, g, b] list, color of the points. Can be 'random' so each point
+        :param color: (r, g, b) tuple, color of the points. Can be 'random' so each point
                       is of a random color (consistent between frames, default mode).
         :param vertical: False for horizontal side-by-side, True for vertical
         :param figure_output: Output as a figure instead of RGB image
         :returns: List of images with features' correspondences
     """
-    return TrackFromFirst(point_data, image_data, color, draw_lines, vertical, figure_output)
+    return TrackFromFirst(point_data, image_data, color,
+                          draw_lines, vertical, figure_output)
 
 
 def synthesize_image(image, accum_flow_data):

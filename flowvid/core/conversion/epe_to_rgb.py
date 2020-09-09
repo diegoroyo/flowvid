@@ -12,6 +12,9 @@ class EPEToRGB(Filterable):
         Filterable.__init__(self)
         if not isinstance(epe_data, Filterable):
             raise AssertionError('epe_data should contain a list of epe data')
+        if not isinstance(color, tuple) or len(color) != 3:
+            raise AssertionError(
+                'color should be a (r, g, b) tuple where rgb range from 0 to 255')
         epe_data.assert_type('epe')
 
         self._epe_data = epe_data
