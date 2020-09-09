@@ -153,6 +153,10 @@ If you want to generate more complex or customized videos, you can easily use `f
 ```python
 import flowvid as fv
 
+# Convert multiple optical flow files to their color representation,
+# and save them to a video (.mp4) file.
+# Similar to `color_flow` preset, without the extra options
+
 # Read flow files data
 flo_data = fv.input.flo('path/to/flo/dir')
 
@@ -166,6 +170,11 @@ out = fv.output.video(filename='output.mp4', framerate=24)
 out.add_all(rgb_data)
 ```
 
+The given code's structure and information flows (`flo`/`rgb` data) can be represented with the following nodes:
+
+<p align="center">
+<img src="https://raw.githubusercontent.com/diegoroyo/flowvid/master/examples/images/diagram_example_color_flow.png" alt="color_flow code representation using nodes">
+</p>
 
 ## Acknowledgements
 

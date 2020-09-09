@@ -1,14 +1,20 @@
 # `flowvid` overview
 
-To get more information about a function, you can use python's `help` method (example below).
+`flowvid` consists of multiple nodes, which can be connected together to form complex tasks. There are three main kinds: input, output and data processing nodes.
 
 * [Input](#input)
-* [Data manipulation](#data-manipulation)
+* [Processing data](#processing-data)
   * [Flow normalization and conversion to RGB](#flow-normalization-and-conversion-to-rgb)
   * [Display optical flow using a quiver plot](#display-optical-flow-using-a-quiver-plot)
   * [Endpoint error normalization and conversion to RGB](#endpoint-error-normalization-and-conversion-to-rgb)
   * [Track a given set of points using optical flow](#track-a-given-set-of-points-using-optical-flow)
 * [Output](#output)
+
+<p align="center">
+<img width="650" src="https://raw.githubusercontent.com/diegoroyo/flowvid/master/examples/images/diagram_node_structure.png" alt="Input, output and data processing nodes">
+</p>
+
+To get more information about a function, you can use python's `help` method (example below).
 
 ```
 $ python3  # enter interactive shell
@@ -33,6 +39,9 @@ flo(path, dir_first=0, dir_total=None)
 ```
 
 ## Input
+
+_Note: operations described here might have additional paramters of customization, check its docstring._
+_You can use python's `help` method: `help(fv.normalize_frame)`._
 
 * `fv.input.flo(path)`: Read `.flo` files from path (file or directory).
 * `fv.input.rgb(path)`: Read `.png`, `.jpg`, `.jpeg` or `.bmp` files from path (file or directory).
@@ -74,7 +83,7 @@ points1 = fv.input.points(custom_points)
 points2 = fv.input.prompt_points(n_points, first_image)
 ```
 
-## Data manipulation
+## Processing data
 
 _Note: operations described here might have additional paramters of customization, check its docstring._
 _You can use python's `help` method: `help(fv.normalize_frame)`._
@@ -182,11 +191,14 @@ track_image2 = fv.track_from_first(points, rgb_data)
 
 ## Output
 
+_Note: operations described here might have additional paramters of customization, check its docstring._
+_You can use python's `help` method: `help(fv.normalize_frame)`._
+
 You can save your work as a video or as an image sequence, or show it in an interactive pyplot:
 
 * `fv.output.video(path, framerate)`: Save as a video with given framerate
-* `fv.output.image(path, name_format, first_id)`: Save as image sequence (see example)
-* `fv.output.flo(path, name_format, first_id)`: Save as .flo files (e.g. normalized/treated optical flow). Uses Middlebury format.
+* `fv.output.image(dir_path, name_format, first_id)`: Save as image sequence (see example)
+* `fv.output.flo(dir_path, name_format, first_id)`: Save as .flo files (e.g. normalized/treated optical flow). Uses Middlebury format.
 * `fv.output.show_plot(title)`: Show interactive pyplot with video results sequence
 
 ```python
@@ -196,11 +208,11 @@ import flowvid as fv
 rgb_frames = fv.flow_to_rgb(flo_video)
 
 # Option 1: Save as video
-out1 = fv.output.video(filename='output.mp4', framerate=24)
+out1 = fv.output.video('output.mp4', framerate=24)
 out1.add_all(rgb_frames, verbose=True) # verbose adds a progress bar
 
 # Option 2: Save as video (another, more complicated way)
-out2 = fv.output.video(filename='output2.mp4')
+out2 = fv.output.video('output2.mp4')
 for frame in rgb_frames:
     out2.add_frame(frame)
 
