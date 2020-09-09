@@ -1,10 +1,14 @@
+import numpy as np
+
+from typing import Union, Tuple
+
 from .flo_data import FloData
 from .rgb_data import RGBData
 from .track_points import TrackPoints, TrackRectangles
 from .point_input import pyplot_prompt
 
 
-def flo(path, dir_first=0, dir_total=None):
+def flo(path: str, dir_first: int = 0, dir_total: int = None):
     """
         Read .flo files and process them as a list of flow data
         Orders files by searching for the first number that appears in its name:
@@ -24,7 +28,7 @@ def flo(path, dir_first=0, dir_total=None):
     return FloData(path, extensions=('.flo'), dir_first=dir_first, dir_total=dir_total)
 
 
-def rgb(path, dir_first=0, dir_total=None):
+def rgb(path: str, dir_first: int = 0, dir_total: int = None):
     """
         Read .png/.bmp/.jpg/.jpeg files and process them as a list of RGB data
         Orders files by searching for the first number that appears in its name:
@@ -42,7 +46,7 @@ def rgb(path, dir_first=0, dir_total=None):
     return RGBData(path, extensions=('.png', '.bmp', '.jpg', '.jpeg'), dir_first=dir_first, dir_total=dir_total)
 
 
-def points(custom_points):
+def points(custom_points: np.ndarray):
     """
         Convert a [n, 2] ndarray with (x, y) point data for one frame
         to an object usable by filters/operators.
@@ -53,7 +57,7 @@ def points(custom_points):
     return TrackPoints(custom_points)
 
 
-def prompt_points(n, image):
+def prompt_points(n: int, image: Union[Tuple[int, int], np.ndarray]):
     """
         Prompt the user to select points on a given image
         :param n: Number of points to select
@@ -65,7 +69,7 @@ def prompt_points(n, image):
     return TrackPoints(pyplot_prompt(n, image))
 
 
-def rect(path, rect_format='x0 y0 xw yw', elem_first=0, elem_total=None):
+def rect(path, rect_format: str = 'x0 y0 xw yw', elem_first: int = 0, elem_total: int = None):
     """
         Read a file and return a list of rectangle data
         :param path: Text file, which contains one line per frame,

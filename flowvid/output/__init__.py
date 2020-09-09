@@ -2,10 +2,9 @@ from .video_output import VideoOutput
 from .image_output import ImageOutput
 from .flo_output import FloOutput
 from .plot_show import PlotShow
-import os
 
 
-def video(path, framerate=24):
+def video(path: str, framerate: float = 24):
     """
         Video output generator
         :param path: Where to save the video
@@ -15,7 +14,7 @@ def video(path, framerate=24):
     return VideoOutput(path, framerate)
 
 
-def images(dir_path, name_format="{:04}.png", first_id=0):
+def images(dir_path: str, name_format: str = '{:04}.png', first_id: int = 0):
     """
         Image sequence output generator
         :param dir_path: Directory to save the images
@@ -26,7 +25,7 @@ def images(dir_path, name_format="{:04}.png", first_id=0):
     return ImageOutput(dir_path, name_format, first_id)
 
 
-def flo(dir_path, name_format="{:04}.flo", first_id=0):
+def flo(dir_path: str, name_format: str = '{:04}.flo', first_id: int = 0):
     """
         Flow file sequence output generator. Using Middlebury format:
         http://vision.middlebury.edu/flow/code/flow-code/README.txt
@@ -38,7 +37,7 @@ def flo(dir_path, name_format="{:04}.flo", first_id=0):
     return FloOutput(dir_path, name_format, first_id)
 
 
-def show_plot(title='', framerate=10):
+def show_plot(title: str = '', framerate: float = 10):
     """
         Show the given images in an interactive pyplot plot
         :param title: Plot title to show
