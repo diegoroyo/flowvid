@@ -137,7 +137,7 @@ rgb_data = fv.flow_to_rgb(flo_norm)
 # Use black arrows with flat color
 quiver_data = fv.draw_flow_arrows(rgb_data, flo_data,
                                   background_attenuation=0.2,
-                                  color=[0, 0, 0],
+                                  color=(0, 0, 0),
                                   flat_colors=True)
 
 # Show the quiver plot in an interactive video

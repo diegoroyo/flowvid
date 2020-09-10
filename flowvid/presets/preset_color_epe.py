@@ -39,7 +39,7 @@ def preset_color_epe(kwargs):
     elif norm_type == 'video':
         epe_data = fv.normalize_video(
             epe_data, clamp_pct=clamp_pct, gamma=gamma, verbose=True)
-    image_data = fv.epe_to_rgb(epe_data, color=[255, 255, 255])
+    image_data = fv.epe_to_rgb(epe_data, color=(255, 255, 255))
 
     # Generate output
     if out_figure:
