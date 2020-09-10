@@ -34,12 +34,14 @@ def preset_plot_epe(kwargs):
     if density:  # probability density function using weights instead of density parameter
         weights /= len(weights)
 
-    plt.hist(epe_flat, bins=np.logspace(np.log10(1e-4), np.log10(1e3), num=40), label='Estimated EPE',
+    plt.hist(epe_flat, bins=np.logspace(np.log10(1e-4), np.log10(1e3), num=40), label='Endpoint error',
              cumulative=cumulative, weights=weights, density=False, histtype='step')
     plt.xscale('log')
+    plt.xlabel('Error (pixels)')
+    plt.ylabel(f'{"Percentage" if density else "Number"} of ocurrences')
     plt.grid()
-    plt.title('EPE distribution\n' + str(len(flo_gt)) +
-              ' frames @ ' + str(w) + 'x' + str(h) + 'px')
+    plt.title(f'EPE distribution{" (cumulative)" if cumulative else ""}\n'
+              f'{len(flo_gt)} frames @ {w}x{h} px')
 
     if cumulative:
         plt.legend(loc='lower right')
