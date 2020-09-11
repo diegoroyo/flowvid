@@ -8,9 +8,13 @@ from ..core.filterable import Filterable
 class VideoOutput:
     """ Save as video file """
 
-    def __init__(self, filename, framerate):
+    def __init__(self, filename, framerate, ignore_plot_warning):
         self._fig = plt.figure()  # used for Axes to rgb conversion
         self._video = imageio.get_writer(filename, fps=framerate)
+
+        if not ignore_plot_warning and len(plt.get_fignums()) > 1:
+            raise AssertionError('Using video output at the same time as other matplotlib plots can cause problems. '
+                                 'To use this, clear all other figures before using video output or set ignore_plot_warning.')
 
     def __del__(self):
         if self._video is not None:

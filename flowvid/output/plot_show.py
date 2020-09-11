@@ -10,9 +10,12 @@ class PlotShow:
 
     TIME_POLL_PAUSE = 0.1  # seconds
 
-    def __init__(self, plot_title, framerate):
+    def __init__(self, plot_title, framerate, ignore_plot_warning):
         if framerate <= 0.0:
             raise AssertionError('Framerate should be bigger than 0')
+        if not ignore_plot_warning and len(plt.get_fignums()) > 0:
+            raise AssertionError('Using plot show output at the same time as other matplotlib plots can cause problems. '
+                                 'To use this, clear all other figures before using plot show output or set ignore_plot_warning.')
         self._plot_title = plot_title
         self._framerate = framerate
         self._pause_secs = 1.0 / framerate
