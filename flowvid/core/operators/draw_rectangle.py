@@ -61,8 +61,10 @@ class DrawRectangle(Operator):
             [x0, y0, x1, y1] = rect
             xw = x1 - x0
             yw = y1 - y0
-            rect = patches.Rectangle(
-                (x0, y0), xw, yw, linewidth=1, edgecolor=self._color, facecolor='none')
+            rect = patches.Rectangle((x0, y0), xw, yw,
+                                     linewidth=1,
+                                     edgecolor=self._color,
+                                     facecolor='none')
 
             # Add the patch to the Axes
             ax.add_patch(rect)
@@ -78,11 +80,12 @@ class DrawRectangle(Operator):
             y1 = np.clip(y1, 0, h - 1)
 
             # Drawing
+            result = np.copy(image)
             for px in range(x0, x1):
-                image[y0, px, :] = self._color
-                image[y1, px, :] = self._color
+                result[y0, px, :] = self._color
+                result[y1, px, :] = self._color
             for py in range(y0, y1):
-                image[py, x0, :] = self._color
-                image[py, x1, :] = self._color
+                result[py, x0, :] = self._color
+                result[py, x1, :] = self._color
 
-            return image
+            return result

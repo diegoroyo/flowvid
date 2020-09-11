@@ -29,22 +29,19 @@ def draw_points(image, points, color, cross=True):
     points = points.astype(int)
     points[:, 0] = np.clip(points[:, 0], 1, w - 2)
     points[:, 1] = np.clip(points[:, 1], 1, h - 2)
-    result = np.copy(image)
 
     # Drawing
     for i, [px, py] in enumerate(points):
         # Get color
         point_color = get_color(color, i)
         # Draw point as a small cross
-        result[py, px, :] = point_color
+        image[py, px, :] = point_color
         if cross:
             # no need to check for bounds
-            result[py, px - 1, :] = point_color
-            result[py, px + 1, :] = point_color
-            result[py - 1, px, :] = point_color
-            result[py + 1, px, :] = point_color
-
-    return result
+            image[py, px - 1, :] = point_color
+            image[py, px + 1, :] = point_color
+            image[py - 1, px, :] = point_color
+            image[py + 1, px, :] = point_color
 
 
 def draw_line(image, line, color):
@@ -63,7 +60,6 @@ def draw_line(image, line, color):
     line[:, 1] = np.clip(line[:, 1], 0, h - 1)
     p0 = line[0, :]
     p1 = line[1, :]
-    result = np.copy(image)
     # Simple line algorithm
     if abs(p1[0] - p0[0]) > abs(p1[1] - p0[1]):
         # X axis is bigger, iterate through it
@@ -72,7 +68,7 @@ def draw_line(image, line, color):
         for lx in range(p0[0], p1[0]):
             y = int(p0[1] + (lx - p0[0]) *
                     (p1[1] - p0[1]) / (p1[0] - p0[0]))
-            result[y, lx, :] = color
+            image[y, lx, :] = color
     else:
         # Y axis is bigger, iterate through it
         if p0[1] > p1[1]:
@@ -80,4 +76,4 @@ def draw_line(image, line, color):
         for ly in range(p0[1], p1[1]):
             x = int(p0[0] + (ly - p0[1]) *
                     (p1[0] - p0[0]) / (p1[1] - p0[1]))
-            result[ly, x, :] = color
+            image[ly, x, :] = color

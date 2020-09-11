@@ -29,12 +29,12 @@ class AddFlowRect(Operator):
         [self._h, self._w] = flow_data[0].shape[0:2]
 
     def _items(self):
-        yield self._rect
+        yield np.copy(self._rect)
         for flow in self._flow_data:
             new_rect = self._add(self._rect, flow)
             if self._accumulate:
                 self._rect = new_rect
-            yield new_rect
+            yield np.copy(new_rect)
 
     def __len__(self):
         return 1 + len(self._flow_data)

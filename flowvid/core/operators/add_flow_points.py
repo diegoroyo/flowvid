@@ -30,13 +30,13 @@ class AddFlowPoints(Operator):
         [self._h, self._w] = flow_data[0].shape[0:2]
 
     def _items(self):
-        yield self._points
+        yield np.copy(self._points)
         for flow in self._flow_data:
             new_points = add_flow_points(
                 flow, self._points, self._interpolate)
             if self._accumulate:
                 self._points = new_points
-            yield new_points
+            yield np.copy(new_points)
 
     def __len__(self):
         return 1 + len(self._flow_data)

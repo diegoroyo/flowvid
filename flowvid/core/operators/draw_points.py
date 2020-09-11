@@ -74,7 +74,7 @@ class DrawPoints(Operator):
             if self._figure_output:
                 canvas = convert_to_axes(image)
             else:
-                canvas = image
+                canvas = np.copy(image)
 
             # draw all points with their trails
             last_points = None
